@@ -1,0 +1,22 @@
+mixin createPostForm(user)
+    .postContainer 
+
+        .imgContainer 
+            img(src=`${user.profile}`)
+        .postInfo
+            .textareaContainer 
+                textarea#postTextarea(placeholder="What is on your mind ?")
+                .post-imgs 
+                    //- .post-img 
+                    //-     img(src="/img/profilepics.jpg", alt="", style="width:150px;height:150px") 
+ 
+            .toolbar
+                .items 
+                    .item
+                        input(accept="image/*" type='file' id="imgInp")
+                        i(class="far fa-image imageUpload")
+                    .item
+                        i(class="far fa-smile")
+                .buttonContainer
+                    button#submitPostButton(disabled="") Post
+

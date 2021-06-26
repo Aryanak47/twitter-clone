@@ -21,7 +21,7 @@ router.post("/", async (req,res,next) => {
         })
         .catch(err => {
             payload.errorMessage = "Something went wrong"
-            res.status(200).render("login", payload )
+            return res.status(200).render("login", payload )
 
         })
         if(user != null){

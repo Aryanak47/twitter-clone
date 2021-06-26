@@ -1,6 +1,11 @@
 :root{
     --blue:#1FA2F1;
+    --lightBlue:#9BD1F9;
     --btnHoverBg:#d4edff;
+    --lightColor:rgb(239, 243, 244);
+    --space:15px;
+    
+
 }
 a{
     color: inherit; 
@@ -24,6 +29,7 @@ nav a {
     height: 55px;
     display: flex;
     justify-content: center;
+    color: #212529;
 }
 nav a.blue{
     color: var(--blue);
@@ -34,5 +40,127 @@ nav a:hover{
     border-radius: 50%;
 }
 .mainSectionContainer{
+    border-left:1px solid var(--lightColor);
+    border-right:1px solid var(--lightColor);
+    padding:0;
+    display: flex;
+    flex-direction: column;
    
 }
+h2{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.page-title{
+    padding:0 var(--space);
+    height:53px;
+  
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+    border-bottom:1px solid var(--lightColor);
+}
+.postContainer{
+    display: flex;
+    padding: 10px;
+    border-bottom: 10px solid rgb(185, 202, 211);
+    
+}
+.imgContainer{
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+.imgContainer img{
+    width: 100%;
+    border-radius:50%;
+    
+}
+.toolbar{
+    display: flex;
+    
+}
+
+.items{
+    display: flex;
+    margin-right: auto;
+    
+}
+.item{
+    color: var(--blue);
+    margin-right: 10px;
+    font-size: 20px;
+    transition:transform .2s ease;
+}
+.item:hover{
+    cursor: pointer;
+
+}
+
+.postInfo{
+    flex: 1;
+    
+}
+#postTextarea{
+    width: 100%;
+    border: none;
+    resize: none;
+    font-size: 20px;
+    
+}
+#submitPostButton{
+    color: #fff;
+    background: var(--blue);
+    outline: none;
+    border: none;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+#submitPostButton:disabled{
+    background-color:var(--lightBlue)
+}
+
+#imgInp{
+    display:none;
+}
+
+.post-imgs {
+    display: grid;
+    grid-template-columns: repeat(2,200px);
+    grid-gap: 40px;
+    align-items: center;
+   
+}
+.post-img{
+    position: relative;
+}
+
+.post-imgs img{
+    width:100%
+} 
+.cross-btn{
+    position: absolute;
+    top: -20px;
+    right: 0;
+    
+}
+.cross-btn:hover{
+    cursor: pointer;
+    background-color: var(--btnHoverBg);
+    color: var(--blue);
+    border-radius: 50%;
+}
+.disabled{
+    color:var(--lightBlue);
+}
+.disabled:hover{
+    cursor:none;
+}
+#emojis{
+    position: absolute;
+    margin-top: 50px;
+}
+ 

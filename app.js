@@ -10,7 +10,7 @@ const mongoose = require("mongoose")
 const session = require("express-session")
 
 // connecting to database
-mongoose.connect("mongodb+srv://aryan:aryandatabase@cluster0.rcgwj.mongodb.net/twitterDb?retryWrites=true&w=majority",{
+mongoose.connect(process.env.DB_URL,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -45,7 +45,8 @@ app.use("/register", registerRoute)
 app.use("/logout", logoutRoute)
 app.get("/",middleware.requireLogin, (req,res,next) => {
     res.status(200).render("home",{
-        user:req.session.user
+        user:req.session.user,
+        pageTitle:"Home"
     })
    
 })
