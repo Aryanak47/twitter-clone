@@ -124,10 +124,3 @@ $("#postTextarea").keyup(function (e) {
 
 
 
-// get all the images which are to be uploaded 
-const getImages = () => {
-
-}
-
-
-
