@@ -1,19 +1,18 @@
 mixin createPostForm(user)
     .postContainer 
-
         .imgContainer 
             img(src=`${user.profile}`)
-        .postInfo
+        form.postInfo
             .textareaContainer 
-                textarea#postTextarea(placeholder="What is on your mind ?")
+                textarea#postTextarea(name="content" placeholder="What is on your mind ?")
                 .post-imgs 
                     //- .post-img 
                     //-     img(src="/img/profilepics.jpg", alt="", style="width:150px;height:150px") 
- 
+
             .toolbar
                 .items 
                     .item
-                        input(accept="image/*" type='file' id="imgInp")
+                        input(accept="image/*" type='file' name='photos' id="imgInp" multiple)
                         i(class="far fa-image imageUpload")
                     .item
                         i(class="far fa-smile")

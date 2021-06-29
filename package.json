@@ -10,6 +10,7 @@
   "author": "Aryan Bimali",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
@@ -17,6 +18,8 @@
     "express-session": "^1.17.2",
     "mongodb": "^3.6.9",
     "mongoose": "^5.12.14",
-    "pug": "^3.0.2"
+    "multer": "^1.4.2",
+    "pug": "^3.0.2",
+    "sharp": "^0.28.3"
   }
 }
