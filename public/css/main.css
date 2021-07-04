@@ -4,6 +4,7 @@
     --btnHoverBg:#d4edff;
     --lightColor:rgb(239, 243, 244);
     --space:15px;
+    --greyText:rgb(101,119,134)
     
 
 }
@@ -21,6 +22,11 @@ nav{
     flex-direction: column;
     align-items: flex-end
     
+}
+button{
+    outline: none;
+    border: none;
+    background: transparent;
 }
 nav a {
     padding: 10px;
@@ -163,4 +169,82 @@ h2{
     position: absolute;
     margin-top: 50px;
 }
+.post__photos{
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    grid-gap: 28px;
+    margin: 0 20px;
+}
+.post__photo img{
+    width: 95%;
+}
+.post{
+    padding: var(--space);
+    border-bottom: 1px solid var(--lightColor);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    flex-shrink: 0; 
+}
+.mainPostContainer{
+    display: flex;
+    flex: 1;
+}
+.postContents{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.username,
+.date{
+    color: var(--greyText)
+}
+.emoji{
+    width: 20px;
+    height: 20px;
+    display: inline;
+}
+
+.displayName{
+    font-weight: bold;
+}
+.post__header a:hover{
+    text-decoration: underline;
+}
+.post__header  a,
+span{
+    margin-right: 10px
+}
+.post__body{
+    display: flex;
+    flex-direction: column;
+}
+.post__footer{
+    display: flex;
+    align-items: center;
+}
+
+.post__footer .postButtonContainer{
+   
+    margin: 0 var(--space);
+    color: var(--greyText);
+}
+.post__footer  .postButtonContainer button{
+    color: currentColor;
+      padding:2px 5px;
+}
+
+.post__footer .heart_btn{
+   margin-right: auto;
+}
+.post__footer button:hover{
+    color: var(--blue);
+    background-color: var(--btnHoverBg);
+    border-radius: 50%;
+}
+
+
+
+
  

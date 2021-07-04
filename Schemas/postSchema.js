@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-
-const postSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+const postSchema = Schema({
     content:{ type: String,trim:true},
-    createdBy:{ type:mongoose.Types.ObjectId,ref:"User"},
+    createdBy:{ type:Schema.Types.ObjectId,ref:"User"},
     pinned:Boolean,
     images:[String]
     

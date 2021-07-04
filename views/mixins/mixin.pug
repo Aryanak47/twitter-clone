@@ -8,7 +8,7 @@ mixin createPostForm(user)
                 .post-imgs 
                     //- .post-img 
                     //-     img(src="/img/profilepics.jpg", alt="", style="width:150px;height:150px") 
-
+            input(type='hidden' name='createdBy' value=`${user._id}`)
             .toolbar
                 .items 
                     .item

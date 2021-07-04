@@ -3,6 +3,7 @@ const router = express.Router()
 const multer = require('multer')
 const sharp = require('sharp')
 const Post = require("../../Schemas/postSchema")
+const User = require("../../Schemas/userSchema")
 
 const multerStorage = multer.memoryStorage();
 
@@ -39,7 +40,20 @@ const resizePostPhoto = async (req, res, next) => {
     next();
   }
 
-router.get("/", (req,res,next) => {
+router.get("/", async (req,res,next) => {
+  try {
+    const posts = await Post.find({}).populate("createdBy")
+    res.status(200).json({
+      status: "success",
+      data:  posts
+      
+    })
+  } catch (er) {
+    console.log(er);
+    res.sendStatus(400)
+    
+  }
+ 
 })
 
 router.post("/",uploadMultiple,resizePostPhoto ,async (req,res,next) => {
@@ -47,9 +61,12 @@ router.post("/",uploadMultiple,resizePostPhoto ,async (req,res,next) => {
     return res.sendStatus(400)
   }
   console.log(req.body)
-  await Post.create(req.body)
+  let post = await Post.create(req.body)
+  post = await User.populate(post, { path: "createdBy" })
+
   res.status(200).json({
-      status: 'success'
+      status: 'success',
+      post
   })
 })
 

@@ -4,7 +4,6 @@ const app = express();
 const port = process.env.PORT || 3000
 const middleware = require('./middleware')
 const path = require('path')
-const server = app.listen(port, () => console.log(`listening on port ${port}`))
 const bodyParser = require('body-parser')
 const mongoose = require("mongoose")
 const session = require("express-session")
@@ -56,3 +55,6 @@ app.get("/",middleware.requireLogin, (req,res,next) => {
     })
    
 })
+
+
+const server = app.listen(port, () => console.log(`listening on port ${port}`))

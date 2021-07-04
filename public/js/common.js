@@ -11,9 +11,9 @@ $('input[type="file"]').on('change', function(e) {
     if (files) {
         removeOldImages()
         for (var i = 0; i < files.length; i++) {
-            if (i > 3) {
+            if (i > 3) {a
                 checkImages()
-                break;
+                break; 
             }
             var f = URL.createObjectURL(files[i])
             $(".post-imgs").append(`
@@ -109,18 +109,116 @@ $("#postTextarea").keyup(function (e) {
             try {
                 btn.textContent="Posting..."
                 const result = await axios.post('http://127.0.0.1:8000/api/posts',formData);
-                if(result.data.status ==="success"){  
+                if(result.data.status ==="success"){ 
+                    console.log(result.data.post) 
+                    $(".postsContainer").prepend(createPostHtml(result.data.post))
                     removeOldImages()
                     document.getElementById('imgInp').value=""
                     document.getElementById('postTextarea').value=""
+                    $("#submitPostButton").prop('disabled', true)
                 } 
                 btn.textContent = 'Post'           
             }catch (err) {
+                // Todo show alert
                 console.log(err)
                 btn.textContent = 'Post'
             }
         })
     }
+const createPostHtml = (postData) =>{
+    const profilePic = postData.createdBy.profile
+    const firstName = postData.createdBy.firstName
+    const lastName = postData.createdBy.lastName
+    const username = postData.createdBy.username
+    const fullName = `${firstName} ${lastName}`
+    const timestamp = timeDifference(new Date(),new Date(postData.createdAt))
+    let html =`<div class="post">
+        <div class="mainPostContainer">
+            <div class="imgContainer">
+                <img src=${profilePic} alt="user picture">
+            </div>
+            <div class="postContents">
+                <div class="post__header">
+                <a href="#" class="displayName">${fullName}</a>
+                <span class="username">@${username}</span>
+                <span class="date">${timestamp}</span>
+                </div>
+                <div class="post__body">
+                    <span>${postData.content}</span>
+                    <div class="post__photos">
+                        ${getPhotos(postData.images)}
+                    </div>
+                </div>
+                <div class="post__footer">
+                    <div class="postButtonContainer">
+                        <button>
+                        <i class="far fa-comment"></i>
+                        </button>
+                    </div>
+                    <div class="postButtonContainer heart_btn">
+                        <button>
+                        <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="postButtonContainer">
+                        <button>
+                        <i class="fas fa-retweet"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    `
+    return html
+}
+
+const getPhotos = (photos) =>{
+    if(!photos){
+        return ""
+    }
+    let html = photos.map(photo => {
+        return `<div class="post__photo">
+                    <img src=/img/posts/${photo}>
+                </div>`
+    })
+    return  html.join(" ")
+}
 
 
+function timeDifference(current, previous) {
+
+    var msPerMinute = 60 * 1000;
+    var msPerHour = msPerMinute * 60;
+    var msPerDay = msPerHour * 24;
+    var msPerMonth = msPerDay * 30;
+    var msPerYear = msPerDay * 365;
+
+    var elapsed = current - previous;
+
+    if (elapsed < msPerMinute) {
+        if( elapsed/1000 < 30 ) return "Just now"
+        return Math.round(elapsed/1000) + ' seconds ago';   
+    }
+
+    else if (elapsed < msPerHour) {
+         return Math.round(elapsed/msPerMinute) + ' minutes ago';   
+    }
+
+    else if (elapsed < msPerDay ) {
+         return Math.round(elapsed/msPerHour ) + ' hours ago';   
+    }
+
+    else if (elapsed < msPerMonth) {
+        return  Math.round(elapsed/msPerDay) + ' days ago';   
+    }
+
+    else if (elapsed < msPerYear) {
+        return  Math.round(elapsed/msPerMonth) + ' months ago';   
+    }
+
+    else {
+        return  Math.round(elapsed/msPerYear ) + ' years ago';   
+    }
+}
 
