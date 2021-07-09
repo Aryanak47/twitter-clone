@@ -4,7 +4,11 @@
     --btnHoverBg:#d4edff;
     --lightColor:rgb(239, 243, 244);
     --space:15px;
-    --greyText:rgb(101,119,134)
+    --greyText:rgb(101,119,134);
+    --red:rgb(226,34,94);
+    --redBg:rgba(226,34,94,0.1);
+    --grn:rgb(34,226,94);
+    --grnBg:rgba(34,226,94,0.1);
     
 
 }
@@ -243,8 +247,29 @@ span{
     background-color: var(--btnHoverBg);
     border-radius: 50%;
 }
+ button i,
+ button span{
+     pointer-events: none;
+ }
+ .postButtonContainer.red button.active{
+     color: var(--red);
+ }
 
-
-
+ .postButtonContainer.red button:hover{
+    color: var(--red);
+    background-color:var(--redBg)
+}
+ .postButtonContainer.green button.active{
+     color: var(--grn);
+ }
+ .postButtonContainer.green button:hover{
+     color: var(--grn);
+     background-color:var(--grnBg)
+ }
+.postContainerAction{
+    color: var(--greyText);
+    margin-bottom: 5px;
+    padding-left: 25px
+}
 
  

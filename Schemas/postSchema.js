@@ -4,8 +4,10 @@ const postSchema = Schema({
     content:{ type: String,trim:true},
     createdBy:{ type:Schema.Types.ObjectId,ref:"User"},
     pinned:Boolean,
-    images:[String]
-    
+    images:[String],
+    likes:[{ type:Schema.Types.ObjectId,ref:"User"} ],
+    retweetUsers:[{ type:Schema.Types.ObjectId,ref:"User"} ],
+    retweetData:{ type:Schema.Types.ObjectId,ref:"Post"} ,
 },{ timestamps: true })
 
 

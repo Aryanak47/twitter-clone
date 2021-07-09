@@ -51,9 +51,9 @@ app.use("/api/posts", postRoute)
 app.get("/",middleware.requireLogin, (req,res,next) => {
     res.status(200).render("home",{
         user:req.session.user,
+        userJs:JSON.stringify(req.session.user),
         pageTitle:"Home"
     })
-   
 })
 
 

@@ -100,39 +100,57 @@ $("#postTextarea").keyup(function (e) {
     }
     btn.prop('disabled', true) 
 })
-    const postForm = document.querySelector('form');
-    if(postForm){
-        postForm.addEventListener('submit', async e => {
-            e.preventDefault();
-            const btn = document.getElementById('submitPostButton');
-            var formData = new FormData(postForm);
-            try {
-                btn.textContent="Posting..."
-                const result = await axios.post('http://127.0.0.1:8000/api/posts',formData);
-                if(result.data.status ==="success"){ 
-                    console.log(result.data.post) 
-                    $(".postsContainer").prepend(createPostHtml(result.data.post))
-                    removeOldImages()
-                    document.getElementById('imgInp').value=""
-                    document.getElementById('postTextarea').value=""
-                    $("#submitPostButton").prop('disabled', true)
-                } 
-                btn.textContent = 'Post'           
-            }catch (err) {
-                // Todo show alert
-                console.log(err)
-                btn.textContent = 'Post'
-            }
-        })
-    }
+
+const postForm = document.querySelector('form');
+if(postForm){
+    postForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn = document.getElementById('submitPostButton');
+        var formData = new FormData(postForm);
+        try {
+            btn.textContent="Posting..."
+            const result = await axios.post('http://127.0.0.1:8000/api/posts',formData);
+            if(result.data.status ==="success"){ 
+                $(".postsContainer").prepend(createPostHtml(result.data.post))
+                removeOldImages()
+                document.getElementById('imgInp').value=""
+                document.getElementById('postTextarea').value=""
+                $("#submitPostButton").prop('disabled', true)
+            } 
+            btn.textContent = 'Post'           
+        }catch (err) {
+            // Todo show alert
+            console.log(err)
+            btn.textContent = 'Post'
+        }
+    })
+}
 const createPostHtml = (postData) =>{
+    if(postData == null) return alert("post is an null objec")
+    console.log(postData)
+    const isRetweet = postData.retweetData != undefined
+    const retweetedBy = isRetweet ? postData.createdBy.username : null
+    postData = isRetweet ? postData.retweetData : postData
+    let retweetText = ""
+    console.log(retweetedBy)
+    if(isRetweet){
+        retweetText = `<span>  
+        <i class="fas fa-retweet"></i> 
+        <a href="/profile/${retweetedBy}">Retweeted by ${retweetedBy}</a>
+        </span>`
+    }
     const profilePic = postData.createdBy.profile
     const firstName = postData.createdBy.firstName
     const lastName = postData.createdBy.lastName
     const username = postData.createdBy.username
     const fullName = `${firstName} ${lastName}`
     const timestamp = timeDifference(new Date(),new Date(postData.createdAt))
-    let html =`<div class="post">
+    const isLiked = postData.likes.includes(signedUser._id)
+    const isTweeted= postData.retweetUsers.includes(signedUser._id)
+    let html =`<div class="post" data-id="${postData._id}">
+                <div class="postContainerAction">
+                ${retweetText}
+            </div>
         <div class="mainPostContainer">
             <div class="imgContainer">
                 <img src=${profilePic} alt="user picture">
@@ -155,14 +173,16 @@ const createPostHtml = (postData) =>{
                         <i class="far fa-comment"></i>
                         </button>
                     </div>
-                    <div class="postButtonContainer heart_btn">
-                        <button>
+                    <div class="postButtonContainer red heart_btn likeBtn">
+                        <button class=${isLiked ?  "active" : ""}>
                         <i class="far fa-heart"></i>
+                        <span>${postData.likes.length || ""}</span>
                         </button>
                     </div>
-                    <div class="postButtonContainer">
-                        <button>
+                    <div class="postButtonContainer green">
+                        <button class="retweetBtn ${isTweeted ?  "active" : ""}">
                         <i class="fas fa-retweet"></i>
+                        <span>${postData.retweetUsers.length || ""}</span>
                         </button>
                     </div>
                 </div>
@@ -222,3 +242,40 @@ function timeDifference(current, previous) {
     }
 }
 
+// like button
+$(document).on('click', ".likeBtn",async function (event) {
+    const btn = $(event.target)
+    parent = getPostId(btn)
+    if (parent === undefined) return 
+    const res = await axios.put(`http://127.0.0.1:8000/api/posts/${parent}/like`);
+    const post =res.data.post
+    btn.find("span").text(post.likes.length || "")
+    if(post.likes.includes(signedUser._id)){
+        btn.addClass("active")
+        return
+    }
+    btn.removeClass("active")
+})
+// retweet button
+$(document).on('click', ".retweetBtn",async function (event) {
+    const btn = $(event.target)
+    parent = getPostId(btn)
+    if (parent === undefined) return 
+    const res = await axios.put(`http://127.0.0.1:8000/api/posts/${parent}/retweet`);
+    const post =res.data.post
+    console.log(post)
+    btn.find("span").text(post.retweetUsers.length || "")
+    if(post.retweetUsers.includes(signedUser._id)){
+        btn.addClass("active")
+        return
+    }
+    btn.removeClass("active")
+})
+
+const getPostId = (element) => {
+    const isRoot = element.hasClass("post")
+    const parentElement = isRoot ? element : element.closest(".post")
+    const id = parentElement.data().id
+    if (id === undefined) return alert('id not found')
+    return id
+}

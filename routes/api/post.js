@@ -1,73 +1,96 @@
 const express = require('express');
 const router = express.Router()
-const multer = require('multer')
-const sharp = require('sharp')
 const Post = require("../../Schemas/postSchema")
 const User = require("../../Schemas/userSchema")
-
-const multerStorage = multer.memoryStorage();
-
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb(new AppError('Not an image! Please upload only images.', 400), false);
-  }
-};
-
-const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter
-});
-var uploadMultiple = upload.fields([{ name: 'photos', maxCount: 4 }])
-
-
-
-const resizePostPhoto = async (req, res, next) => {
-    if (!req.files.photos) return next();
-    req.body.images = []
-    await Promise.all(
-        req.files.photos.map(async file => {
-        file.filename = `post-${file.fieldname}-${Date.now()}.jpeg`;
-        await sharp(file.buffer)
-          .resize(500, 500)
-          .toFormat('jpeg')
-          .jpeg({ quality: 90 })
-          .toFile(`public/img/posts/${file.filename}`);
-          req.body.images.push(file.filename);
-
-    }))
-    next();
-  }
+const imageHandler = require("../../utils/imageHandler")
 
 router.get("/", async (req,res,next) => {
   try {
-    const posts = await Post.find({}).populate("createdBy")
+    let posts = await Post.find({})
+    .populate("createdBy")
+    .populate({
+      path:"retweetData",
+      populate:{
+        path:"createdBy",
+        model:"User"
+      }
+    })
     res.status(200).json({
       status: "success",
       data:  posts
-      
     })
   } catch (er) {
     console.log(er);
-    res.sendStatus(400)
-    
+    res.sendStatus(500)
   }
  
 })
 
-router.post("/",uploadMultiple,resizePostPhoto ,async (req,res,next) => {
-  if(!req.body.content){
-    return res.sendStatus(400)
+router.post("/",imageHandler.uploadMultiple,imageHandler.resizePostPhoto ,async (req,res,next) => {
+  try {
+    if(!req.body.content){
+      return res.sendStatus(400)
+    }
+    let post = await Post.create(req.body)
+    post = await User.populate(post, { path: "createdBy" })
+  
+    res.status(200).json({
+        status: 'success',
+        post
+    })
+    
+  } catch (error) {
+    res.sendStatus(500)
   }
-  console.log(req.body)
-  let post = await Post.create(req.body)
-  post = await User.populate(post, { path: "createdBy" })
 
-  res.status(200).json({
-      status: 'success',
+})
+
+router.put("/:post/like",async (req,res,next) => {
+  try {
+    const postId = req.params.post
+    const userId = req.session.user._id
+    if(!userId){
+      return res.status(401)
+    }
+    const isLiked = req.session.user.likes.includes(postId)
+    const option = isLiked ? "$pull" : "$addToSet"
+    req.session.user = await User.findByIdAndUpdate({_id:userId},{[option] : {likes:postId}},{new:true})
+    let post = await Post.findByIdAndUpdate({_id:postId},{[option] : {likes:userId}},{new:true})
+    res.status(200).json({
+      status: 200,
       post
-  })
+    })
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500)
+    
+  }
+})
+router.put("/:post/retweet",async (req,res,next) => {
+  try {
+    const postId = req.params.post
+    const userId = req.session.user._id
+    if(!userId){
+      return res.status(401)
+    }
+    // delete post if already exists
+    const deletedPost = await Post.findOneAndDelete({ createdBy:userId,retweetData:postId })
+    const option = deletedPost !== null ? "$pull" : "$addToSet"
+    repost = deletedPost
+    if(repost === null){
+      repost = await Post.create({createdBy:userId,retweetData:postId })
+    }
+    req.session.user = await User.findByIdAndUpdate({_id:userId},{[option] : {retweet:repost._id}},{new:true})
+    let post = await Post.findByIdAndUpdate({_id:postId},{[option] : {retweetUsers:userId}},{new:true})
+    res.status(200).json({
+      status: 200,
+      post
+    })
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500)
+    
+  }
 })
 
 
