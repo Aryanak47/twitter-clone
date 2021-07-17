@@ -15,9 +15,40 @@ router.get("/", async (req,res,next) => {
         model:"User"
       }
     })
+    .populate({
+      path:"replyTo",
+      populate:{
+        path:"createdBy",
+        model:"User"
+      }
+    })
     res.status(200).json({
       status: "success",
       data:  posts
+    })
+  } catch (er) {
+    console.log(er);
+    res.sendStatus(500)
+  }
+ 
+})
+
+router.get("/:id", async (req,res,next) => {
+  try {
+    const {id} = req.params
+    if(!id) return res.status(400)
+    const post = await Post.findOne({_id:id})
+    .populate("createdBy")
+    .populate({
+      path:"retweetData",
+      populate:{
+        path:"createdBy",
+        model:"User"
+      }
+    })
+    res.status(200).json({
+      status: "success",
+      data:  post
     })
   } catch (er) {
     console.log(er);
@@ -30,6 +61,9 @@ router.post("/",imageHandler.uploadMultiple,imageHandler.resizePostPhoto ,async 
   try {
     if(!req.body.content){
       return res.sendStatus(400)
+    }
+    if(req.body.replyTo){
+      req.body.createdBy = req.session.user._id
     }
     let post = await Post.create(req.body)
     post = await User.populate(post, { path: "createdBy" })
