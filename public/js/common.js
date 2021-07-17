@@ -90,10 +90,11 @@ $('.fa-smile').click(function (e) {
     }
 })
 
-$("#postTextarea").keyup(function (e) {
+$("#postTextarea, #replyTextarea").keyup(function (e) {
     var textArea = $(e.target) 
     var text = textArea.val().trim()
-    const btn = $("#submitPostButton")
+    const isModal = textArea.parents(".modal").length == 1;
+    const btn = isModal ? $("#replyBtn") : $("#submitPostButton")
     if(text){
         btn.prop('disabled', false)
         return
@@ -127,18 +128,23 @@ if(postForm){
 }
 const createPostHtml = (postData) =>{
     if(postData == null) return alert("post is an null objec")
-    console.log(postData)
     const isRetweet = postData.retweetData != undefined
     const retweetedBy = isRetweet ? postData.createdBy.username : null
     postData = isRetweet ? postData.retweetData : postData
     let retweetText = ""
-    console.log(retweetedBy)
     if(isRetweet){
         retweetText = `<span>  
         <i class="fas fa-retweet"></i> 
         <a href="/profile/${retweetedBy}">Retweeted by ${retweetedBy}</a>
         </span>`
     }
+    let replyText = ""
+    if(postData.replyTo) {
+        replyText = `<div>
+            <span class="replyText">Replying to <a href="/profile">@${postData.replyTo.createdBy.username}</a></span>
+        </div>`
+    }
+    
     const profilePic = postData.createdBy.profile
     const firstName = postData.createdBy.firstName
     const lastName = postData.createdBy.lastName
@@ -162,6 +168,7 @@ const createPostHtml = (postData) =>{
                 <span class="date">${timestamp}</span>
                 </div>
                 <div class="post__body">
+                    ${replyText}
                     <span>${postData.content}</span>
                     <div class="post__photos">
                         ${getPhotos(postData.images)}
@@ -169,7 +176,7 @@ const createPostHtml = (postData) =>{
                 </div>
                 <div class="post__footer">
                     <div class="postButtonContainer">
-                        <button>
+                        <button  data-toggle="modal" data-target="#replyModal">
                         <i class="far fa-comment"></i>
                         </button>
                     </div>
@@ -242,11 +249,46 @@ function timeDifference(current, previous) {
     }
 }
 
+// reply button
+$("#replyModal").on('show.bs.modal',async function (event) {
+    const btn = $(event.relatedTarget)
+    const postId = getPostId(btn)
+    if (postId === undefined) return 
+    const res = await axios.get(`http://127.0.0.1:8000/api/posts/${postId}`);
+    const html = createPostHtml(res.data.data)
+    const body =  $(".modal-body .post")
+    body.html("")
+    body.html(html)
+
+    
+})
+// reply button
+$("#replyModal").on('hidden.bs.modal',async function (event) {
+    $(".modal-body .post").html("")
+})
+
+$("#replyBtn").on("click",async function (event) {
+    const id = $("#replyBtn").attr('data-id')
+    try {
+        const formData = new FormData()
+        formData.append("content", $("#replyTextarea").val())
+        formData.append("replyTo",id )
+        const result = await axios.post('http://127.0.0.1:8000/api/posts',formData);
+        if(result.data.status ==="success"){ 
+            location.reload("/")
+           
+        }            
+    }catch (err) {
+        // Todo show alert
+        console.log(err)
+    }
+
+})
 // like button
 $(document).on('click', ".likeBtn",async function (event) {
-    const btn = $(event.target)
+    const btn = $(event.target) 
     parent = getPostId(btn)
-    if (parent === undefined) return 
+    if (parent == undefined) return 
     const res = await axios.put(`http://127.0.0.1:8000/api/posts/${parent}/like`);
     const post =res.data.post
     btn.find("span").text(post.likes.length || "")
@@ -263,7 +305,6 @@ $(document).on('click', ".retweetBtn",async function (event) {
     if (parent === undefined) return 
     const res = await axios.put(`http://127.0.0.1:8000/api/posts/${parent}/retweet`);
     const post =res.data.post
-    console.log(post)
     btn.find("span").text(post.retweetUsers.length || "")
     if(post.retweetUsers.includes(signedUser._id)){
         btn.addClass("active")

@@ -18,7 +18,7 @@ $(document).ready( function (){
 const outputPost = (container,results) => {
     container.html("")
     let html =""
-    if(results){
+    if(results){ 
         html = results.map(item => {
             return createPostHtml(item)
         })  

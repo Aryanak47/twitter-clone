@@ -112,12 +112,16 @@ h2{
     flex: 1;
     
 }
-#postTextarea{
+.postContainer textarea{
     width: 100%;
     border: none;
     resize: none;
     font-size: 20px;
     
+}
+.modal-body .post{
+    padding: 0;
+
 }
 #submitPostButton{
     color: #fff;
@@ -270,6 +274,17 @@ span{
     color: var(--greyText);
     margin-bottom: 5px;
     padding-left: 25px
+}
+.modal .postContainer{
+    border: 0;
+    padding:0 inherit;
+    margin:0;
+}
+.replyText{
+    color: var(--greyText);
+}
+.replyText a {
+    color: var(--blue)
 }
 
  
