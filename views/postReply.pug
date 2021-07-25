@@ -1,0 +1,9 @@
+extends layout/main-layout.pug
+block content
+   script.
+      let postId = `!{postInfo}`
+   .postsContainer
+   +createReplyForm(user)
+block script
+   script(src="/js/postReply.js")
+    

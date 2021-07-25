@@ -37,18 +37,20 @@ router.get("/:id", async (req,res,next) => {
   try {
     const {id} = req.params
     if(!id) return res.status(400)
-    const post = await Post.findOne({_id:id})
-    .populate("createdBy")
-    .populate({
-      path:"retweetData",
-      populate:{
-        path:"createdBy",
-        model:"User"
-      }
-    })
+    const posts = await getPosts({_id:id})
+    const post = posts[0]
+    let results = {
+      postData:post
+    }
+    if(post.replyTo !== undefined){
+      results.replyTo = post.replyTo
+    }
+    results.replies = await getPosts({replyTo:id})
+
+
     res.status(200).json({
       status: "success",
-      data:  post
+      data:  results
     })
   } catch (er) {
     console.log(er);
@@ -74,6 +76,7 @@ router.post("/",imageHandler.uploadMultiple,imageHandler.resizePostPhoto ,async 
     })
     
   } catch (error) {
+    console.log(error)
     res.sendStatus(500)
   }
 
@@ -110,7 +113,7 @@ router.put("/:post/retweet",async (req,res,next) => {
     // delete post if already exists
     const deletedPost = await Post.findOneAndDelete({ createdBy:userId,retweetData:postId })
     const option = deletedPost !== null ? "$pull" : "$addToSet"
-    repost = deletedPost
+    let repost = deletedPost
     if(repost === null){
       repost = await Post.create({createdBy:userId,retweetData:postId })
     }
@@ -127,5 +130,26 @@ router.put("/:post/retweet",async (req,res,next) => {
   }
 })
 
+async function getPosts(filter){
+  const post = await Post.find({...filter})
+  .populate("createdBy")
+  .populate({
+    path:"retweetData",
+    populate:{
+      path:"createdBy",
+      model:"User"
+    }
+  })
+   .populate({
+    path:"replyTo",
+     populate:{
+      path:"createdBy",
+      model:"User"
+    }
+  })
+  return post
+
+
+}
 
 module.exports = router

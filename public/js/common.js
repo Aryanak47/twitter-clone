@@ -129,6 +129,7 @@ if(postForm){
 const createPostHtml = (postData) =>{
     if(postData == null) return alert("post is an null objec")
     const isRetweet = postData.retweetData != undefined
+
     const retweetedBy = isRetweet ? postData.createdBy.username : null
     postData = isRetweet ? postData.retweetData : postData
     let retweetText = ""
@@ -139,7 +140,7 @@ const createPostHtml = (postData) =>{
         </span>`
     }
     let replyText = ""
-    if(postData.replyTo) {
+    if(postData.replyTo && postData.replyTo._id) {
         replyText = `<div>
             <span class="replyText">Replying to <a href="/profile">@${postData.replyTo.createdBy.username}</a></span>
         </div>`
@@ -253,9 +254,10 @@ function timeDifference(current, previous) {
 $("#replyModal").on('show.bs.modal',async function (event) {
     const btn = $(event.relatedTarget)
     const postId = getPostId(btn)
-    if (postId === undefined) return 
+    if (postId == undefined) return 
+    $("#replyBtn").attr('data-id',postId)
     const res = await axios.get(`http://127.0.0.1:8000/api/posts/${postId}`);
-    const html = createPostHtml(res.data.data)
+    const html = createPostHtml(res.data.data.postData)
     const body =  $(".modal-body .post")
     body.html("")
     body.html(html)
@@ -269,6 +271,7 @@ $("#replyModal").on('hidden.bs.modal',async function (event) {
 
 $("#replyBtn").on("click",async function (event) {
     const id = $("#replyBtn").attr('data-id')
+   
     try {
         const formData = new FormData()
         formData.append("content", $("#replyTextarea").val())
@@ -313,10 +316,36 @@ $(document).on('click', ".retweetBtn",async function (event) {
     btn.removeClass("active")
 })
 
+
+$(document).on('click', ".post",async function (event) {
+    const post = $(event.target)
+    parent = getPostId(post)
+    if (parent === undefined || post.is("button")) return 
+    window.location.href = `http://127.0.0.1:8000/posts/${parent}`
+
+})
+
 const getPostId = (element) => {
     const isRoot = element.hasClass("post")
     const parentElement = isRoot ? element : element.closest(".post")
     const id = parentElement.data().id
     if (id === undefined) return alert('id not found')
     return id
+}
+
+const outputReply = (container,results) => {
+    if(!results) return
+    container.html("")
+    if(results.replyTo && results.replyTo._id){
+       $(container).append(createPostHtml(results.replyTo))
+    }
+    $(container).append(createPostHtml(results.postData))
+    let html =""
+    if(results.replies){ 
+        html = results.replies.map(item => {
+            return createPostHtml(item)
+        })  
+        html = html.join(" ")
+    }
+    $(container).append(html)
 }

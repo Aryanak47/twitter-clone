@@ -38,6 +38,7 @@ app.use(session({
 const loginRoute = require('./routes/loginRoute')
 const registerRoute = require('./routes/registerRoute')
 const logoutRoute = require('./routes/logoutRoute')
+const postReplyRoute = require('./routes/postRoute')
 
 // Api routes
 const postRoute = require('./routes/api/post')
@@ -47,6 +48,7 @@ app.use("/register", registerRoute)
 app.use("/logout", logoutRoute)
 
 app.use("/api/posts", postRoute)
+app.use("/posts", postReplyRoute)
 
 app.get("/",middleware.requireLogin, (req,res,next) => {
     res.status(200).render("home",{
