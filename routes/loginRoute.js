@@ -26,8 +26,6 @@ router.post("/", async (req,res,next) => {
                 if(valid){
                     req.session.user = user
                     return res.redirect("/")
-                
-
                 }
             }
                 payload.errorMessage = "incorrect password or email"

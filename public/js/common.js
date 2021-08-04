@@ -1,6 +1,4 @@
 
-
-
 // for image uploading
 $(".imageUpload").click(function () {
     $("input[type='file']").trigger('click');
@@ -167,10 +165,14 @@ const createPostHtml = (postData) =>{
                 <a href="#" class="displayName">${fullName}</a>
                 <span class="username">@${username}</span>
                 <span class="date">${timestamp}</span>
+                <div class="optionMenu" tabindex="-1">
+                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                    <div class="postMenus toggle" data-createdBy=${postData.createdBy._id}></div>
+                </div>
                 </div>
                 <div class="post__body">
                     ${replyText}
-                    <span>${postData.content}</span>
+                    <span>${DOMPurify.sanitize(postData.content)}</span>
                     <div class="post__photos">
                         ${getPhotos(postData.images)}
                     </div>
@@ -195,6 +197,7 @@ const createPostHtml = (postData) =>{
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         </div>
     `
@@ -274,7 +277,8 @@ $("#replyBtn").on("click",async function (event) {
    
     try {
         const formData = new FormData()
-        formData.append("content", $("#replyTextarea").val())
+        const reply = DOMPurify.sanitize( $("#replyTextarea").val() );
+        formData.append("content", reply )
         formData.append("replyTo",id )
         const result = await axios.post('http://127.0.0.1:8000/api/posts',formData);
         if(result.data.status ==="success"){ 
@@ -317,10 +321,11 @@ $(document).on('click', ".retweetBtn",async function (event) {
 })
 
 
-$(document).on('click', ".post",async function (event) {
+$(document).on('click', ".post__body",async function (event) {
     const post = $(event.target)
     parent = getPostId(post)
-    if (parent === undefined || post.is("button")) return 
+    if (parent === undefined || post.is("button") || post.is("i")) return 
+  console.log(post)
     window.location.href = `http://127.0.0.1:8000/posts/${parent}`
 
 })
@@ -349,3 +354,47 @@ const outputReply = (container,results) => {
     }
     $(container).append(html)
 }
+
+$(document).on('click','.optionMenu',(event) => {
+    const btn = $(event.target)
+    const optionMenu = btn.hasClass("optionMenu")
+    if(!optionMenu) return
+    const menu = btn.find(".postMenus")
+    const hasMenus = (menu).children().length
+    if(hasMenus) return
+    const mypost = signedUser._id.toString() === menu.data().createdby.toString()
+    const options = mypost ? ['Edit','Delete','Pin'] : ['Pin']
+    const optionsIcon = mypost ? ['fa-pencil','fa-trash-o','fa-thumb-tack']:['fa-thumb-tack']
+    let html = options.map((item, i) =>{
+        return `<div class="postMenu post${item}">
+            <div class="postMenu__icon">
+            <i class="fa ${optionsIcon[i]}" aria-hidden="true"></i>
+            </div>
+            <div class="postMenu__item">
+                <span>${item} the post </span>
+
+            </div>
+        </div>`} )
+        html = html.join(" ")
+    menu.html(html)
+   
+  
+})
+$(document).on('click','.postDelete',async (event) => {
+    console.log("delting.............")
+    const dltBtn = $(event.target)
+    const postId = getPostId(dltBtn)
+    if (postId == undefined) alert("undefined postid")
+    try{
+        const response = await axios.delete(`http://127.0.0.1:8000/api/posts/${postId}`) 
+        if(response.status == 204){
+          return location.reload()
+        }
+        alert("Could not delete please try again later")       
+    }catch (err) {
+        // Todo show alert
+        console.log(err)
+    }
+})
+
+

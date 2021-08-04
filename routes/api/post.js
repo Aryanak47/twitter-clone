@@ -36,6 +36,7 @@ router.get("/", async (req,res,next) => {
 router.get("/:id", async (req,res,next) => {
   try {
     const {id} = req.params
+    console.log(id)
     if(!id) return res.status(400)
     const posts = await getPosts({_id:id})
     const post = posts[0]
@@ -151,5 +152,17 @@ async function getPosts(filter){
 
 
 }
+
+
+router.delete('/:id', (req, res,next) => {
+  const id = req.params.id
+  if(!id) res.sendStatus(400)
+  Post.findByIdAndDelete(id)
+  .then(() =>  res.sendStatus(204))
+  .catch(() => res.sendStatus(400))
+ 
+  
+
+})
 
 module.exports = router
