@@ -41,4 +41,14 @@ mixin createReplyForm(user)
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button#replyBtn.btn.btn-primary(type='button' disabled ="") Reply
 
+mixin createFollowingBtn(user,isFollowing)
+    - text = isFollowing ? "Following" : "follow"
+    - btnClass = isFollowing ? "followBtn following" : "followBtn"
+    button(class=`${btnClass}` data-id=`${user._id}`) #{text}
+
+
+mixin createTabs(name,href,isSelected)
+    - className = isSelected ? "tab tab-active":"tab"
+    a(href=`${href}` class=`${className}`) 
+        span #{name}
 

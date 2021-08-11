@@ -1,0 +1,30 @@
+extends layout/main-layout.pug
+block content
+    script. 
+        let userProfile = "!{profile._id }"
+        let selected = "!{selectedTab}"
+    .profileHeaderContainer 
+        .coverPhoto
+            .imgContainer  
+                img(src=`${profile.profile}`, alt="user profile image")
+        .profileBtns 
+            a(href="#" class="profileBtn")
+                i(class="far fa-envelope")
+            +createFollowingBtn(profile,true)
+        .profileInfoContainer 
+            .fullName 
+                span.displayName #{profile.firstName + " " + profile.lastName} 
+                span.username @#{profile.username}
+            .followerContainer
+                a.following(href=`/profile{${profile.username}}/following`)
+                    span.value #{0}
+                    span.text #{"Following"}
+                a.followers(href=`/profile{${profile.username}}/follower`)  
+                    span.value #{0}
+                    span.text #{"Follower"}
+    .tabContainer
+        +createTabs("Post",`/profile/${profile.username}`,selectedTab != "reply")
+        +createTabs("Reply",`/profile/${profile.username}/replies`,selectedTab == "reply")
+    .postsContainer
+block script
+   script(src="/js/profile.js")

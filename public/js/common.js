@@ -139,8 +139,9 @@ const createPostHtml = (postData) =>{
     }
     let replyText = ""
     if(postData.replyTo && postData.replyTo._id) {
+        const user = postData.replyTo.createdBy.username
         replyText = `<div>
-            <span class="replyText">Replying to <a href="/profile">@${postData.replyTo.createdBy.username}</a></span>
+            <span class="replyText">Replying to <a href="/profile/${user}">@${user}</a></span>
         </div>`
     }
     
@@ -162,7 +163,7 @@ const createPostHtml = (postData) =>{
             </div>
             <div class="postContents">
                 <div class="post__header">
-                <a href="#" class="displayName">${fullName}</a>
+                <a href="/profile/${username}" class="displayName">${fullName}</a>
                 <span class="username">@${username}</span>
                 <span class="date">${timestamp}</span>
                 <div class="optionMenu" tabindex="-1">

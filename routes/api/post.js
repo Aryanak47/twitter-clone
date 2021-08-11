@@ -6,24 +6,16 @@ const imageHandler = require("../../utils/imageHandler")
 
 router.get("/", async (req,res,next) => {
   try {
-    let posts = await Post.find({})
-    .populate("createdBy")
-    .populate({
-      path:"retweetData",
-      populate:{
-        path:"createdBy",
-        model:"User"
-      }
-    })
-    .populate({
-      path:"replyTo",
-      populate:{
-        path:"createdBy",
-        model:"User"
-      }
-    })
+    let filter = {}
+    filter = {...req.query}
+    if(filter && filter.reply != undefined) {
+      let reply = filter.reply == "true"
+      filter.replyTo = {$exists: reply}
+      delete filter.reply 
+    }
+    let posts = await getPosts(filter)
     res.status(200).json({
-      status: "success",
+      status: "success", 
       data:  posts
     })
   } catch (er) {
@@ -36,7 +28,6 @@ router.get("/", async (req,res,next) => {
 router.get("/:id", async (req,res,next) => {
   try {
     const {id} = req.params
-    console.log(id)
     if(!id) return res.status(400)
     const posts = await getPosts({_id:id})
     const post = posts[0]
@@ -132,7 +123,7 @@ router.put("/:post/retweet",async (req,res,next) => {
 })
 
 async function getPosts(filter){
-  const post = await Post.find({...filter})
+  const post = await Post.find(filter)
   .populate("createdBy")
   .populate({
     path:"retweetData",

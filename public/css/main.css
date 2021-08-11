@@ -1,6 +1,7 @@
 :root{
     --blue:#1FA2F1;
     --lightBlue:#9BD1F9;
+    --Bgblue:rgba(157 170 249, .9);
     --btnHoverBg:#d4edff;
     --lightColor:rgb(239, 243, 244);
     --space:15px;
@@ -222,8 +223,7 @@ h2{
 .post__header a:hover{
     text-decoration: underline;
 }
-.post__header  a,
-span{
+ .post__header > *:not(div)  {
     margin-right: 10px
 }
 .post__body{
@@ -344,5 +344,108 @@ span{
 .postMenu i {
     margin: 0 10px;
 }
+.coverPhoto{
+    height:160px;
+    position: relative;
+    background-color:var(--blue)
+}
+
+.coverPhoto .imgContainer{
+    width:80px;
+    height:80px;
+    position:absolute;
+    bottom:-40px;
+    left:10px;
+    border:4px solid #fff;
+    border-radius:50%;
+}
+
+.profileBtns{
+    text-align:right;
+    padding:10px;
+      min-height: 60px;
+
+}
+.profileBtn,.followBtn {
+    color:var(--blue);
+    border:1px solid var(--blue);
+    padding:5px 10px;
+    font-weight:bold;
+    border-radius:20px;
+    display:inline-block;
+    margin:0 5px;
+}
+
+.followBtn:hover,.profileBtn:hover{
+    background-color:var(--Bgblue);
+}
+
+.followBtn.following{
+    background-color:var(--blue);
+    color:#fff;
+ 
+}
+
+.profileInfoContainer{
+    margin-left:10px;
+    margin-top:-10px;
+}
+.profileInfoContainer .fullName{
+    display: flex;
+    flex-direction:column;
+}
+
+.followerContainer .value{
+    font-weight:bold;
+}
+.followerContainer .text{
+    color:var(--greyText)
+}
+
+.followerContainer  a:hover{
+    border-bottom:1px solid #000;
+
+} 
+.followerContainer  span:not(.value){
+    margin-left:5px;
+}
+
+.followerContainer a{
+    margin-right:10px;
+}
+
+.tabContainer{
+    display:flex;
+    border-bottom:1px solid var(--lightColor);
+    margin-top:10px;
+   
+}
+.tab{
+    flex:1;
+     margin-left:10px;
+     padding:15px;
+     display:flex;
+     justify-content:center;
+     font-weight:bold;
+     color:var(--greyText)
+
+}
+.tab:hover{
+    color:var(--blue);
+    background-color: rgb(157 170 249 / 27%);
+ 
+}
+
+.tab-active{
+    border-bottom:2px solid var(--blue);
+}
+
+
+
+
+
+
+
+
 
 
