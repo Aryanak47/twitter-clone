@@ -7,12 +7,13 @@ $(".imageUpload").click(function () {
 $('input[type="file"]').on('change', function(e) {
     const files = $(e.target.files)
     if (files) {
+        if(files.length > 4){
+            alertUser("Can't upload more than 4 images")
+            return
+        }
+        const fileLen =  files.length
         removeOldImages()
-        for (var i = 0; i < files.length; i++) {
-            if (i > 3) {a
-                checkImages()
-                break; 
-            }
+        for (var i = 0; i < fileLen; i++) {
             var f = URL.createObjectURL(files[i])
             $(".post-imgs").append(`
             <div class="post-img" >
@@ -20,14 +21,28 @@ $('input[type="file"]').on('change', function(e) {
                 <img src=${f} data-name=${files[i].name} alt="upload picture" >
             </div>
             `)
-          }
-       
-        $(".cross-btn").click( function (e) {
-            removeImage(e)
-        })
-        
+        }
     }
+     
 })
+
+$(document).on('click', ".cross-btn", function (e) {
+    removeImage(e)
+})
+const hideAlert = () => {
+    $(".alert").remove()
+   
+}
+const  alertUser = (msg)=> {
+    hideAlert()
+    const el = document.createElement('div')
+    const alterMsg = document.createElement('p')
+    $(el).addClass("alert")
+    $("body").append(el)
+    $(alterMsg).html(msg)
+    $(".alert").html(alterMsg)
+    setTimeout(hideAlert,3000)
+}
 // remove image
 const removeImage = (e) => {
     const btn = e.target
@@ -56,19 +71,19 @@ const removeOldImages = () => {
         images.empty()
     }
 }
-// check total number of imageUpload
-const checkImages = () => {
-    const totalImages = $(".post-imgs").children().length
-    if(totalImages >3 ){
-        $(".imageUpload").addClass("disabled");
-        $('input[type="file"]').prop("disabled",true)
-       return 
-    }
-    $(".imageUpload").removeClass("disabled");
-    $('input[type="file"]').prop("disabled",false)
+// // check total number of imageUpload
+// const checkImages = () => {
+//     const totalImages = $(".post-imgs").children().length
+//     if(totalImages >3 ){
+//         $(".imageUpload").addClass("disabled");
+//         $('input[type="file"]').prop("disabled",true)
+//         return 
+//     }
+//     $(".imageUpload").removeClass("disabled");
+//     $('input[type="file"]').prop("disabled",false)
 
 
-}
+// }
 
 
 // handle emoji
@@ -107,6 +122,7 @@ if(postForm){
         const btn = document.getElementById('submitPostButton');
         var formData = new FormData(postForm);
         try {
+            console.log($('input[type="file"]')[0].files)
             btn.textContent="Posting..."
             const result = await axios.post('http://127.0.0.1:8000/api/posts',formData);
             if(result.data.status ==="success"){ 
@@ -326,7 +342,6 @@ $(document).on('click', ".post__body",async function (event) {
     const post = $(event.target)
     parent = getPostId(post)
     if (parent === undefined || post.is("button") || post.is("i")) return 
-  console.log(post)
     window.location.href = `http://127.0.0.1:8000/posts/${parent}`
 
 })
@@ -398,4 +413,16 @@ $(document).on('click','.postDelete',async (event) => {
     }
 })
 
-
+const outputPost = (container,results) => {
+    container.html("")
+    let html =""
+    if(results.length > 0){ 
+        html = results.map(item => {
+            return createPostHtml(item)
+        })  
+        html = html.join(" ")
+    }else{
+        html = "<span>Nothing to show</span>"
+    }
+    container.html(html)
+}

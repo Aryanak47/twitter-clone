@@ -4,7 +4,7 @@ const User = require("../Schemas/postSchema")
 
 
 
-router.get("/", async (req,res,next) => {
+router.get("/:id", async (req,res,next) => {
     const {id} = req.params
     if(!id) return res.status(400)
     res.status(200).render("postReply",{

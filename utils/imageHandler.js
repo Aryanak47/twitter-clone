@@ -15,7 +15,7 @@ const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter
 });
-exports.uploadMultiple = upload.fields([{ name: 'photos', maxCount: 4 }])
+exports.uploadMultiple = upload.fields([{ name: 'photos', maxCount: 5 }])
 
 
 
@@ -26,7 +26,7 @@ exports.resizePostPhoto = async (req, res, next) => {
         req.files.photos.map(async file => {
         file.filename = `post-${file.fieldname}-${Date.now()}.jpeg`;
         await sharp(file.buffer)
-          .resize(500, 500)
+          // .resize(500, 500)
           .toFormat('jpeg')
           .jpeg({ quality: 90 })
           .toFile(`public/img/posts/${file.filename}`);

@@ -33,15 +33,5 @@ const loadPosts = () => {
 }
 
 
-const outputPost = (container,results) => {
-    container.html("")
-    let html =""
-    if(results){ 
-        html = results.map(item => {
-            return createPostHtml(item)
-        })  
-        html = html.join(" ")
-    }
-    container.html(html)
-}
+
 
