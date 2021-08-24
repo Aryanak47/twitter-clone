@@ -13,7 +13,7 @@ router.get("/", async (req,res,next) => {
       filter.replyTo = {$exists: reply}
       delete filter.reply 
     }
-    let posts = await getPosts(filter)
+    let posts = await getPosts(filter)  
     res.status(200).json({
       status: "success", 
       data:  posts
@@ -28,7 +28,7 @@ router.get("/", async (req,res,next) => {
 router.get("/:id", async (req,res,next) => {
   try {
     const {id} = req.params
-    if(!id) return res.status(400)
+    if(!id) return res.sendStatus(400)
     const posts = await getPosts({_id:id})
     const post = posts[0]
     let results = {
@@ -79,7 +79,7 @@ router.put("/:post/like",async (req,res,next) => {
     const postId = req.params.post
     const userId = req.session.user._id
     if(!userId){
-      return res.status(401)
+      return res.sendStatus(401)
     }
     const isLiked = req.session.user.likes.includes(postId)
     const option = isLiked ? "$pull" : "$addToSet"

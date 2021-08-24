@@ -160,14 +160,16 @@ h2{
 }
 
 .post-imgs {
-    grid-gap: 10px;
-    display: grid;
-    align-items: center;
-    grid-template-columns: repeat(2,280px);
+    display:flex;
+    flex-wrap: wrap;
+    margin: 10px 0;
    
 }
 .post-img{
     position: relative;
+    margin-left: 8px;
+    flex: 1 0 35%;
+   
     
 }
 
@@ -178,8 +180,8 @@ h2{
 } 
 .cross-btn{
     position: absolute;
-    top: -20px;
-    right: 0;
+    top: -21px;
+    left: 90%;
     
 }
 .cross-btn:hover{
@@ -394,6 +396,10 @@ h2{
     border-radius:20px;
     display:inline-block;
     margin:0 5px;
+   
+}
+.followBtn:focus{
+    outline:none;
 }
 
 .followBtn:hover,.profileBtn:hover{

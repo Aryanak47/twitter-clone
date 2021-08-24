@@ -143,7 +143,6 @@ if(postForm){
 const createPostHtml = (postData) =>{
     if(postData == null) return alert("post is an null objec")
     const isRetweet = postData.retweetData != undefined
-
     const retweetedBy = isRetweet ? postData.createdBy.username : null
     postData = isRetweet ? postData.retweetData : postData
     let retweetText = ""
@@ -426,3 +425,28 @@ const outputPost = (container,results) => {
     }
     container.html(html)
 }
+
+// follow button
+$(document).on('click', ".followBtn", async function (event) {
+    const btn = $(event.target)
+    const id = btn.data('id')
+    const followerValue = $(".followers .value")
+    try {
+        const res = await axios.put(`/api/users/${id}/follow`);
+        const following = res.data.user.following && res.data.user.following.includes(id)
+        if(following){
+            btn.addClass("following")
+            btn.text("Following")
+            followerValue.text(`${followerValue.text() * 1 + 1}`)
+            return
+        }
+        btn.removeClass("following") 
+        btn.text("Follow") 
+        followerValue.text(`${followerValue.text() * 1 - 1}`)
+    } catch (error) {
+        console.log(error);
+        
+    }
+   
+
+})

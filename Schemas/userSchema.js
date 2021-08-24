@@ -9,5 +9,11 @@ const userSchema =  mongoose.Schema({
     profile: { type: String, default: "/img/profilepics.jpg" },
     likes:[{ type:mongoose.Schema.Types.ObjectId,ref:"Post"} ],
     retweet:[{ type:mongoose.Schema.Types.ObjectId,ref:"Post"} ],
+    followers:[{ 
+        type:mongoose.Schema.Types.ObjectId,ref:"User"
+    }],
+    following:[{ 
+        type:mongoose.Schema.Types.ObjectId,ref:"User"
+    }],
 },{ timestamps: true })
 module.exports = mongoose.model("User",userSchema)

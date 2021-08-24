@@ -8,19 +8,20 @@ block content
             .imgContainer  
                 img(src=`${profile.profile}`, alt="user profile image")
         .profileBtns 
-            a(href="#" class="profileBtn")
-                i(class="far fa-envelope")
-            +createFollowingBtn(profile,true)
+            if logedIn != profile._id
+                a(href="#" class="profileBtn")
+                    i(class="far fa-envelope")
+                +createFollowingBtn(profile,profile.followers && profile.followers.includes(logedIn))
         .profileInfoContainer 
             .fullName 
                 span.displayName #{profile.firstName + " " + profile.lastName} 
                 span.username @#{profile.username}
             .followerContainer
                 a.following(href=`/profile{${profile.username}}/following`)
-                    span.value #{0}
+                    span.value #{`${profile.following ? profile.following.length : 0}`}
                     span.text #{"Following"}
                 a.followers(href=`/profile{${profile.username}}/follower`)  
-                    span.value #{0}
+                    span.value #{`${profile.followers ? profile.followers.length : 0}`}
                     span.text #{"Follower"}
     .tabContainer
         +createTabs("Post",`/profile/${profile.username}`,selectedTab != "reply")

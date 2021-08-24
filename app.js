@@ -42,20 +42,24 @@ const postReplyRoute = require('./routes/postRoute')
 const profileRoute = require('./routes/profileRoute')
 
 // Api routes
-const postRoute = require('./routes/api/post')
+const postRoute = require('./routes/api/posts')
+const userRoute = require('./routes/api/users')
 
 // Views
 app.use("/login", loginRoute)
 app.use("/register", registerRoute)
-app.use("/logout", logoutRoute)
 
+// others routes need authentication
+app.use(middleware.requireLogin)
+app.use("/logout", logoutRoute)
 app.use("/posts", postReplyRoute)
 app.use("/profile", profileRoute)
-
 // Api
 app.use("/api/posts", postRoute)
+app.use("/api/users", userRoute)
 
-app.get("/",middleware.requireLogin, (req,res,next) => {
+
+app.get("/", (req,res,next) => {
     res.status(200).render("home",{
         user:req.session.user,
         userJs:JSON.stringify(req.session.user),
