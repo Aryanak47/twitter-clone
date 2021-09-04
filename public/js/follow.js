@@ -43,9 +43,14 @@ function outputUsers(container,data) {
         let followBtn = ` <button class=${btnClass} data-id=${user._id}>${text}</button>`
         return `<div class="user__header">
       
-        <div class="user__info">    
-            <a href="/profile/${user.username}" class="displayName">${user.firstName} ${user.lastName}</a>
-            <p class="username">@${user.username}</p>
+        <div class="user__info">  
+            <div class="imgContainer">
+                <img src=${user.profile}>
+            </div>
+            <div>
+                <a href="/profile/${user.username}" class="displayName">${user.firstName} ${user.lastName}</a>
+                <p class="username">@${user.username}</p>
+            </div>
             ${myProfile ? "":followBtn}
         </div>
         </div>`

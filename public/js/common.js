@@ -1,7 +1,10 @@
 
+// Globals
+let cropper;
+
 // for image uploading
 $(".imageUpload").click(function () {
-    $("input[type='file']").trigger('click');
+    $("input[type='file']")[0].trigger('click');
 });
   
 $('input[type="file"]').on('change', function(e) {
@@ -286,6 +289,28 @@ $("#replyModal").on('show.bs.modal',async function (event) {
 // reply button
 $("#replyModal").on('hidden.bs.modal',async function (event) {
     $(".modal-body .post").html("")
+})
+
+$("#uploadProfile").change(function (e) {
+    if(this.files && this.files[0]){
+        let reader = new FileReader();
+        reader.onload = (e) => {
+           let image = document.getElementById("previewImg")
+           image.src = e.target.result
+           if (cropper !== undefined) {
+            cropper.destroy()
+           }
+           cropper = new Cropper(image,{
+               background:false,
+               aspectRatio: 1 / 1
+           })
+            $(".previewImgContainer").css("display","flex")
+        }
+        reader.readAsDataURL(this.files[0])
+      
+    }else{
+        console.log("not loaded");
+    }
 })
 
 $("#replyBtn").on("click",async function (event) {

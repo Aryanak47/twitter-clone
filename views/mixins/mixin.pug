@@ -52,3 +52,21 @@ mixin createTabs(name,href,isSelected)
     a(href=`${href}` class=`${className}`) 
         span #{name}
 
+mixin createReplyForm(user) 
+    #uploadModel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='uploadModelLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#uploadModelLabel.modal-title Upload a new profile picture
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .modal-body
+                    form.uploadProfilePhoto
+                        input(type="file" id="uploadProfile")
+                        label(name="content" for="uploadProfile") Upload 
+                            i(class="fa fa-camera")
+                    .previewImgContainer
+                        img#previewImg(src = "" alt="upload image")
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#saveBtn.btn.btn-primary(type='button' disabled ="") save

@@ -475,11 +475,43 @@ h2{
     color:rgba(0,0,0,.6);
     display:none;
 }
+.user__info{
+    border-bottom: 1px solid var(--light);
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+.user__info > .followBtn {
+    margin-left: auto;
+}
 .imgContainer:hover .profile__upload {
     display:inline-block; 
     cursor: pointer;   
 
 }
+.uploadProfilePhoto{
+    display:flex;
+    justify-content:center
+}
+.uploadProfilePhoto label:hover{
+   cursor:pointer;
+}
+
+.uploadProfilePhoto input {
+    display:none;
+}
+.previewImgContainer{
+    display:none;
+    overflow: hidden;
+    justify-content:center;
+}
+.previewImgContainer img{
+    object-fit:cover;
+    max-width:100%;
+    width:100%;
+}
+
+
 
 
 

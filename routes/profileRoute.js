@@ -9,7 +9,7 @@ router.get("/", async (req,res,next) => {
     res.status(200).render("profilePage",{
         profile:req.session.user,
         userJs:JSON.stringify(req.session.user),
-        logedIn:req.session.user._id,
+        logedIn:req.session.user,
         pageTitle:req.session.user.username,
     })
    
@@ -21,7 +21,7 @@ router.get("/:username", async (req,res,next) => {
     res.status(200).render("profilePage",{
         profile:user,
         userJs:JSON.stringify(req.session.user),
-        logedIn:req.session.user._id,
+        logedIn:req.session.user,
         pageTitle:user.username,
     })
 })
@@ -34,7 +34,7 @@ router.get("/:username/replies", async (req,res,next) => {
         userJs:JSON.stringify(req.session.user),
         pageTitle:user.username,
         selectedTab:"reply",
-        logedIn:req.session.user._id,
+        logedIn:req.session.user,
     })
 })
 
@@ -45,7 +45,7 @@ router.get("/:username/following", async (req,res,next) => {
     res.status(200).render("follow",{
         profile:user,
         userJs:JSON.stringify(req.session.user),
-        logedIn:req.session.user._id,
+        logedIn:req.session.user,
         pageTitle:"Follow",
         selectedTab:"following",
     })
@@ -57,7 +57,7 @@ router.get("/:username/followers", async (req,res,next) => {
     res.status(200).render("follow",{
         profile:user,
         userJs:JSON.stringify(req.session.user),
-        logedIn:req.session.user._id,
+        logedIn:req.session.user,
         pageTitle:"Follow"
     })
 })

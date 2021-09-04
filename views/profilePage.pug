@@ -7,11 +7,11 @@ block content
         .coverPhoto
             .imgContainer  
                 img(src=`${profile.profile}`, alt="user profile image")
-                if logedIn == profile._id
-                    button(class="profile__upload",data-toggle="modal" data-target="#replyModal")
+                if logedIn._id == profile._id
+                    button(class="profile__upload",data-toggle="modal" data-target="#uploadModel")
                         i(class="fa fa-camera")
         .profileBtns 
-            if logedIn != profile._id
+            if logedIn._id != profile._id
                 a(href="#" class="profileBtn")
                     i(class="far fa-envelope")
                 +createFollowingBtn(profile,profile.followers && profile.followers.includes(logedIn))
@@ -26,9 +26,10 @@ block content
                 a.followers(href=`/profile/${profile.username}/followers`)  
                     span.value #{`${profile.followers ? profile.followers.length : 0}`}
                     span.text #{"Follower"}
-    .tabContainer
+    .tabContainer(data-id=logedIn)
         +createTabs("Post",`/profile/${profile.username}`,selectedTab != "reply")
         +createTabs("Reply",`/profile/${profile.username}/replies`,selectedTab == "reply")
     .postsContainer
+    +createReplyForm(logedIn)
 block script
    script(src="/js/profile.js")
