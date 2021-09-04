@@ -7,6 +7,9 @@ block content
         .coverPhoto
             .imgContainer  
                 img(src=`${profile.profile}`, alt="user profile image")
+                if logedIn == profile._id
+                    button(class="profile__upload",data-toggle="modal" data-target="#replyModal")
+                        i(class="fa fa-camera")
         .profileBtns 
             if logedIn != profile._id
                 a(href="#" class="profileBtn")
@@ -17,10 +20,10 @@ block content
                 span.displayName #{profile.firstName + " " + profile.lastName} 
                 span.username @#{profile.username}
             .followerContainer
-                a.following(href=`/profile{${profile.username}}/following`)
+                a.following(href=`/profile/${profile.username}/following`)
                     span.value #{`${profile.following ? profile.following.length : 0}`}
                     span.text #{"Following"}
-                a.followers(href=`/profile{${profile.username}}/follower`)  
+                a.followers(href=`/profile/${profile.username}/followers`)  
                     span.value #{`${profile.followers ? profile.followers.length : 0}`}
                     span.text #{"Follower"}
     .tabContainer

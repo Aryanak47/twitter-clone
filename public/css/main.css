@@ -380,6 +380,9 @@ h2{
     left:10px;
     border:4px solid #fff;
     border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items: center;
 }
 
 .profileBtns{
@@ -464,6 +467,18 @@ h2{
 
 .tab-active{
     border-bottom:2px solid var(--blue);
+}
+
+.profile__upload {
+    position:absolute;
+    font-size:30px;
+    color:rgba(0,0,0,.6);
+    display:none;
+}
+.imgContainer:hover .profile__upload {
+    display:inline-block; 
+    cursor: pointer;   
+
 }
 
 

@@ -38,6 +38,30 @@ router.get("/:username/replies", async (req,res,next) => {
     })
 })
 
+router.get("/:username/following", async (req,res,next) => {
+    const { username } = req.params
+    const user = await getUser(username)
+    if(!user) return res.sendStatus(400)
+    res.status(200).render("follow",{
+        profile:user,
+        userJs:JSON.stringify(req.session.user),
+        logedIn:req.session.user._id,
+        pageTitle:"Follow",
+        selectedTab:"following",
+    })
+})
+router.get("/:username/followers", async (req,res,next) => {
+    const { username } = req.params
+    const user = await getUser(username)
+    if(!user) return res.sendStatus(400)
+    res.status(200).render("follow",{
+        profile:user,
+        userJs:JSON.stringify(req.session.user),
+        logedIn:req.session.user._id,
+        pageTitle:"Follow"
+    })
+})
+
 const getUser = async username => {
     let user = await User.findOne( {username} )
     if(!user && !username.match(/^[0-9a-fA-F]{24}$/) ){
@@ -49,5 +73,7 @@ const getUser = async username => {
    
 
 }
+
+
 
 module.exports = router
