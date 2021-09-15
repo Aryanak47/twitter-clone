@@ -9,7 +9,7 @@ const mongoose = require("mongoose")
 const session = require("express-session")
 
 // connecting to database
-mongoose.connect(process.env.DB_URL,{
+mongoose.connect(process.env.LOCAL_DB,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -50,7 +50,7 @@ app.use("/login", loginRoute)
 app.use("/register", registerRoute)
 
 // others routes need authentication
-app.use(middleware.requireLogin)
+app.use(middleware.requireLogin)    
 app.use("/logout", logoutRoute)
 app.use("/posts", postReplyRoute)
 app.use("/profile", profileRoute)

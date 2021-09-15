@@ -4,7 +4,7 @@ let cropper;
 
 // for image uploading
 $(".imageUpload").click(function () {
-    $("input[type='file']")[0].trigger('click');
+    $("input[type='file']").trigger('click');
 });
   
 $('input[type="file"]').on('change', function(e) {
@@ -125,9 +125,8 @@ if(postForm){
         const btn = document.getElementById('submitPostButton');
         var formData = new FormData(postForm);
         try {
-            console.log($('input[type="file"]')[0].files)
             btn.textContent="Posting..."
-            const result = await axios.post('http://127.0.0.1:8000/api/posts',formData);
+            const result = await axios.post('/api/posts',formData);
             if(result.data.status ==="success"){ 
                 $(".postsContainer").prepend(createPostHtml(result.data.post))
                 removeOldImages()
@@ -311,6 +310,28 @@ $("#uploadProfile").change(function (e) {
     }else{
         console.log("not loaded");
     }
+})
+
+$("#uploadBtn").click(function (e) {
+    const canvas = cropper.getCroppedCanvas();
+    if(canvas == null){
+        alert("Could not upload.Please make sure it is an image.")
+        return;
+    }
+    canvas.toBlob(async function(blob) {
+        const formData = new FormData();
+        formData.append("croppedImage",blob);
+        try {
+            await axios.post('/api/users/uploadProfile',formData);
+            location.reload()
+        }catch (err) {
+            // Todo show alert
+            console.log(err)
+            alertUser("Something went wrong.try again later")
+        }
+
+    })
+
 })
 
 $("#replyBtn").on("click",async function (event) {

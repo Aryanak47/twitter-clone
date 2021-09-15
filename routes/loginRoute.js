@@ -9,7 +9,6 @@ router.get("/", (req,res,next) => {
    
 })
 router.post("/", async (req,res,next) => {
-    console.log(req.body);
     let payload = req.body
     payload.title = "login"
     try{
