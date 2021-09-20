@@ -311,6 +311,28 @@ $("#uploadProfile").change(function (e) {
         console.log("not loaded");
     }
 })
+$("#uploadCover").change(function (e) {
+    if(this.files && this.files[0]){
+        let reader = new FileReader();
+        reader.onload = (e) => {
+           let image = document.getElementById("coverpreviewImg")
+           image.src = e.target.result
+           if (cropper !== undefined) {
+            cropper.destroy()
+           }
+           cropper = new Cropper(image,{
+               background:false,
+               aspectRatio: 16 / 9
+           })
+            $(".previewImgContainer").css("display","flex")
+        }
+        reader.readAsDataURL(this.files[0])
+      
+    }else{
+        console.log("not loaded");
+    }
+
+})
 
 $("#uploadBtn").click(function (e) {
     const canvas = cropper.getCroppedCanvas();
@@ -323,6 +345,27 @@ $("#uploadBtn").click(function (e) {
         formData.append("croppedImage",blob);
         try {
             await axios.post('/api/users/uploadProfile',formData);
+            location.reload()
+        }catch (err) {
+            // Todo show alert
+            console.log(err)
+            alertUser("Something went wrong.try again later")
+        }
+
+    })
+
+})
+$("#uploadCoverBtn").click(function (e) {
+    const canvas = cropper.getCroppedCanvas();
+    if(canvas == null){
+        alert("Could not upload.Please make sure it is an image.")
+        return;
+    }
+    canvas.toBlob(async function(blob) {
+        const formData = new FormData();
+        formData.append("croppedImage",blob);
+        try {
+            await axios.post('/api/users/uploadCover',formData);
             location.reload()
         }catch (err) {
             // Todo show alert

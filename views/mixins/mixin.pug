@@ -52,7 +52,7 @@ mixin createTabs(name,href,isSelected)
     a(href=`${href}` class=`${className}`) 
         span #{name}
 
-mixin createReplyForm(user) 
+mixin createProfileUpload(user) 
     #uploadModel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='uploadModelLabel' aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content
@@ -66,7 +66,26 @@ mixin createReplyForm(user)
                         label(name="content" for="uploadProfile") Upload 
                             i(class="fa fa-camera")
                     .previewImgContainer
-                        img#previewImg(src = "" alt="upload image")
+                        img#previewImg()
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button#uploadBtn.btn.btn-primary(type='button') save
+
+mixin createCoverUpload(user) 
+    #uploadCoverModel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='uploadCoverModelLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#uploadCoverModelLabel.modal-title Upload a new cover picture
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .modal-body
+                    form.uploadProfilePhoto
+                        input(type="file" id="uploadCover")
+                        label(name="content" for="uploadCover") Upload 
+                            i(class="fa fa-camera")
+                    .previewImgContainer
+                        img#coverpreviewImg()
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#uploadCoverBtn.btn.btn-primary(type='button') save

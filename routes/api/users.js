@@ -71,5 +71,18 @@ router.post(
    res.sendStatus(204)  
   }
 );
+router.post(
+  "/uploadCover",
+  imageHandler.singleUpload.single('croppedImage'),
+  async (req, res, next) => {
+    const coverPhoto = req.body.photo
+    if(!coverPhoto){
+      return sendStatus(400)
+    }
+    const cover = "/img/users/"+coverPhoto
+    req.session.user = await User.findByIdAndUpdate(req.session.user._id,{cover:cover},{new:true})
+   res.sendStatus(204)  
+  }
+);
 
 module.exports = router;

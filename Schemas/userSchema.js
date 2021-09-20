@@ -15,5 +15,6 @@ const userSchema =  mongoose.Schema({
     following:[{ 
         type:mongoose.Schema.Types.ObjectId,ref:"User"
     }],
+    cover: { type: String },
 },{ timestamps: true })
 module.exports = mongoose.model("User",userSchema)

@@ -5,6 +5,13 @@ block content
         let selected = "!{selectedTab}"
     .profileHeaderContainer 
         .coverPhoto
+
+            .coverPhoto__upload
+                if logedIn.cover
+                    img(src=`${logedIn.cover}`, alt="user cover photo")
+                if logedIn._id == profile._id
+                    button(class="cover__upload",data-toggle="modal" data-target="#uploadCoverModel")
+                        i(class="fa fa-camera")
             .imgContainer  
                 img(src=`${profile.profile}`, alt="user profile image")
                 if logedIn._id == profile._id
@@ -30,6 +37,8 @@ block content
         +createTabs("Post",`/profile/${profile.username}`,selectedTab != "reply")
         +createTabs("Reply",`/profile/${profile.username}/replies`,selectedTab == "reply")
     .postsContainer
+    +createProfileUpload(logedIn)
+    +createCoverUpload(logedIn)
     +createReplyForm(logedIn)
 block script
    script(src="/js/profile.js")

@@ -469,7 +469,7 @@ h2{
     border-bottom:2px solid var(--blue);
 }
 
-.profile__upload {
+.profile__upload, .cover__upload {
     position:absolute;
     font-size:30px;
     color:rgba(0,0,0,.6);
@@ -484,7 +484,18 @@ h2{
 .user__info > .followBtn {
     margin-left: auto;
 }
-.imgContainer:hover .profile__upload {
+.coverPhoto__upload{
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+.coverPhoto__upload:hover{
+    cursor:pointer;
+}
+.imgContainer:hover .profile__upload,
+.coverPhoto__upload:hover .cover__upload {
     display:inline-block; 
     cursor: pointer;   
 
@@ -495,6 +506,11 @@ h2{
 }
 .uploadProfilePhoto label:hover{
    cursor:pointer;
+}
+.coverPhoto__upload img{
+    width:100%;
+    object-fit:cover;
+    height:100%;
 }
 
 .uploadProfilePhoto input {
