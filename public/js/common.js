@@ -161,7 +161,18 @@ const createPostHtml = (postData) =>{
             <span class="replyText">Replying to <a href="/profile/${user}">@${user}</a></span>
         </div>`
     }
-    
+    let pinButtton = ""
+    let pintext = ""
+    if(signedUser._id == postData.createdBy._id) {
+        let pinClass = ""
+        let dataTarget = "#confirmPinModel"
+        if(postData.pinned) {
+            pintext=`<i class="fas fa-thumbtack"><span class="pintext">Pinned</span></i>`
+            pinClass = "active"
+            dataTarget = "#unconfirmPinModel"
+        }
+        pinButtton = `<button class="btn-pin ${pinClass}" data-id="${postData._id}" data-toggle="modal" data-target="${dataTarget}" ><i class="fas fa-thumbtack"></i></button>`
+    }
     const profilePic = postData.createdBy.profile
     const firstName = postData.createdBy.firstName
     const lastName = postData.createdBy.lastName
@@ -172,6 +183,7 @@ const createPostHtml = (postData) =>{
     const isTweeted= postData.retweetUsers.includes(signedUser._id)
     let html =`<div class="post" data-id="${postData._id}">
                 <div class="postContainerAction">
+                ${pintext}
                 ${retweetText}
             </div>
         <div class="mainPostContainer">
@@ -183,8 +195,9 @@ const createPostHtml = (postData) =>{
                 <a href="/profile/${username}" class="displayName">${fullName}</a>
                 <span class="username">@${username}</span>
                 <span class="date">${timestamp}</span>
+                ${pinButtton}
                 <div class="optionMenu" tabindex="-1">
-                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                    ${signedUser._id == postData.createdBy._id ? '<i class="fa fa-ellipsis-h" aria-hidden="true"></i>' :""}
                     <div class="postMenus toggle" data-createdBy=${postData.createdBy._id}></div>
                 </div>
                 </div>
@@ -270,6 +283,48 @@ function timeDifference(current, previous) {
         return  Math.round(elapsed/msPerYear ) + ' years ago';   
     }
 }
+// pin button
+$("#confirmPinModel").on('show.bs.modal',async function (event) {
+    const btn = $(event.relatedTarget)
+    const postId = getPostId(btn)
+    if (postId == undefined) return 
+    $("#confirmPinBtn").attr('data-id',postId)  
+})
+$("#confirmPinBtn").on("click", async function (event) {
+    const id = $("#confirmPinBtn").attr('data-id')
+    try {
+         await axios.put(`/api/posts/${id}`,{params: {
+            pinned: true,
+          }});
+        location.reload("/")           
+    }catch (err) {
+        // Todo show alert
+        console.log(err)
+    }
+
+})
+
+// unpin button click
+$("#unconfirmPinModel").on('show.bs.modal',async function (event) {
+    const btn = $(event.relatedTarget)
+    const postId = getPostId(btn)
+    if (postId == undefined) return 
+    $("#unconfirmPinBtn").attr('data-id',postId)  
+})
+
+$("#unconfirmPinBtn").on("click",async function (event) {
+    const id = $("#unconfirmPinBtn").attr('data-id')
+    try {
+        await axios.put(`/api/posts/${id}`,{params: {
+            pinned: false,
+          }});
+        location.reload("/")           
+    }catch (err) {
+        alertUser("Try again later")
+    }
+
+})
+
 
 // reply button
 $("#replyModal").on('show.bs.modal',async function (event) {
@@ -277,7 +332,7 @@ $("#replyModal").on('show.bs.modal',async function (event) {
     const postId = getPostId(btn)
     if (postId == undefined) return 
     $("#replyBtn").attr('data-id',postId)
-    const res = await axios.get(`http://127.0.0.1:8000/api/posts/${postId}`);
+    const res = await axios.get(`/api/posts/${postId}`);
     const html = createPostHtml(res.data.data.postData)
     const body =  $(".modal-body .post")
     body.html("")
@@ -385,7 +440,7 @@ $("#replyBtn").on("click",async function (event) {
         const reply = DOMPurify.sanitize( $("#replyTextarea").val() );
         formData.append("content", reply )
         formData.append("replyTo",id )
-        const result = await axios.post('http://127.0.0.1:8000/api/posts',formData);
+        const result = await axios.post('/api/posts',formData);
         if(result.data.status ==="success"){ 
             location.reload("/")
            
@@ -401,7 +456,7 @@ $(document).on('click', ".likeBtn",async function (event) {
     const btn = $(event.target) 
     parent = getPostId(btn)
     if (parent == undefined) return 
-    const res = await axios.put(`http://127.0.0.1:8000/api/posts/${parent}/like`);
+    const res = await axios.put(`/api/posts/${parent}/like`);
     const post =res.data.post
     btn.find("span").text(post.likes.length || "")
     if(post.likes.includes(signedUser._id)){
@@ -415,7 +470,7 @@ $(document).on('click', ".retweetBtn",async function (event) {
     const btn = $(event.target)
     parent = getPostId(btn)
     if (parent === undefined) return 
-    const res = await axios.put(`http://127.0.0.1:8000/api/posts/${parent}/retweet`);
+    const res = await axios.put(`/api/posts/${parent}/retweet`);
     const post =res.data.post
     btn.find("span").text(post.retweetUsers.length || "")
     if(post.retweetUsers.includes(signedUser._id)){
@@ -430,7 +485,7 @@ $(document).on('click', ".post__body",async function (event) {
     const post = $(event.target)
     parent = getPostId(post)
     if (parent === undefined || post.is("button") || post.is("i")) return 
-    window.location.href = `http://127.0.0.1:8000/posts/${parent}`
+    window.location.href = `/posts/${parent}`
 
 })
 
@@ -467,8 +522,9 @@ $(document).on('click','.optionMenu',(event) => {
     const hasMenus = (menu).children().length
     if(hasMenus) return
     const mypost = signedUser._id.toString() === menu.data().createdby.toString()
-    const options = mypost ? ['Edit','Delete','Pin'] : ['Pin']
-    const optionsIcon = mypost ? ['fa-pencil','fa-trash-o','fa-thumb-tack']:['fa-thumb-tack']
+    if(!mypost) return 
+    const options =  ['Edit','Delete'] 
+    const optionsIcon =  ['fa-pencil','fa-trash-o']
     let html = options.map((item, i) =>{
         return `<div class="postMenu post${item}">
             <div class="postMenu__icon">
@@ -485,12 +541,11 @@ $(document).on('click','.optionMenu',(event) => {
   
 })
 $(document).on('click','.postDelete',async (event) => {
-    console.log("delting.............")
     const dltBtn = $(event.target)
     const postId = getPostId(dltBtn)
     if (postId == undefined) alert("undefined postid")
     try{
-        const response = await axios.delete(`http://127.0.0.1:8000/api/posts/${postId}`) 
+        const response = await axios.delete(`/api/posts/${postId}`) 
         if(response.status == 204){
           return location.reload()
         }

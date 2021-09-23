@@ -36,9 +36,12 @@ block content
     .tabContainer(data-id=logedIn)
         +createTabs("Post",`/profile/${profile.username}`,selectedTab != "reply")
         +createTabs("Reply",`/profile/${profile.username}/replies`,selectedTab == "reply")
+    .pinnedPostContainer
     .postsContainer
-    +createProfileUpload(logedIn)
-    +createCoverUpload(logedIn)
+    +createProfileUpload()
+    +createCoverUpload()
     +createReplyForm(logedIn)
+    +createPinButton()
+    +unconfirmPinModel()
 block script
    script(src="/js/profile.js")

@@ -85,8 +85,8 @@ router.put("/:post/like",async (req,res,next) => {
     const option = isLiked ? "$pull" : "$addToSet"
     req.session.user = await User.findByIdAndUpdate({_id:userId},{[option] : {likes:postId}},{new:true})
     let post = await Post.findByIdAndUpdate({_id:postId},{[option] : {likes:userId}},{new:true})
-    res.status(200).json({
-      status: 200,
+    res.status(202).json({
+      status: 202,
       post
     })
   } catch (error) {
@@ -111,8 +111,8 @@ router.put("/:post/retweet",async (req,res,next) => {
     }
     req.session.user = await User.findByIdAndUpdate({_id:userId},{[option] : {retweet:repost._id}},{new:true})
     let post = await Post.findByIdAndUpdate({_id:postId},{[option] : {retweetUsers:userId}},{new:true})
-    res.status(200).json({
-      status: 200,
+    res.status(202).json({
+      status: 202,
       post
     })
   } catch (error) {
@@ -144,6 +144,21 @@ async function getPosts(filter){
 
 }
 
+router.put("/:id",async (req, res) => {
+  try {
+    
+    const data = req.body.params
+    if(data.pinned !== undefined) {
+      await Post.updateMany({createdBy:req.session.user._id},{pinned:false})
+    }
+    await Post.findByIdAndUpdate(req.params.id,data)
+    res.sendStatus(202)
+  } catch (error) {
+    console.error(error)
+    res.sendStatus(500)
+    
+  }
+})
 
 router.delete('/:id', (req, res,next) => {
   const id = req.params.id

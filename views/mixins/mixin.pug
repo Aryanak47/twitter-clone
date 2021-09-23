@@ -52,7 +52,7 @@ mixin createTabs(name,href,isSelected)
     a(href=`${href}` class=`${className}`) 
         span #{name}
 
-mixin createProfileUpload(user) 
+mixin createProfileUpload() 
     #uploadModel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='uploadModelLabel' aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content
@@ -71,7 +71,7 @@ mixin createProfileUpload(user)
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button#uploadBtn.btn.btn-primary(type='button') save
 
-mixin createCoverUpload(user) 
+mixin createCoverUpload() 
     #uploadCoverModel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='uploadCoverModelLabel' aria-hidden='true')
         .modal-dialog(role='document')
             .modal-content
@@ -89,3 +89,31 @@ mixin createCoverUpload(user)
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button#uploadCoverBtn.btn.btn-primary(type='button') save
+
+mixin createPinButton() 
+    #confirmPinModel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='confirmPinModelLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#confirmPinModel.modal-title Pin this post ?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .model-body
+                    p This post will appear at the top of the page.You can only pin one post.
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#confirmPinBtn.btn.btn-primary(type='button') Pin
+mixin unconfirmPinModel() 
+
+    #unconfirmPinModel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='unconfirmPinModelLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#unconfirmPinModel.modal-title unpin this post ?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .model-body
+                    p This will unpin this post.
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#unconfirmPinBtn.btn.btn-primary(type='button') Unpin

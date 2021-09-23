@@ -98,6 +98,7 @@ h2{
     width: 50px;
     height: 50px;
     margin-right: 10px;
+    z-index: 200;
 }
 .imgContainer img{
     width: 100%;
@@ -369,11 +370,13 @@ h2{
 .coverPhoto{
     height:160px;
     position: relative;
-    background-color:var(--blue)
+    background-color:var(--blue);
+    /* z-index: unset; */
 }
 
 .coverPhoto .imgContainer{
     width:80px;
+    z-index: 200;
     height:80px;
     position:absolute;
     bottom:-40px;
@@ -383,6 +386,7 @@ h2{
     display:flex;
     justify-content:center;
     align-items: center;
+    /* z-index: 2; */
 }
 
 .profileBtns{
@@ -525,6 +529,14 @@ h2{
     object-fit:cover;
     max-width:100%;
     width:100%;
+}
+
+.btn-pin.active i{
+    color: var(--blue) !important;
+}
+.pintext{
+    margin-left: 10px;
+    font-size: 12px;
 }
 
 

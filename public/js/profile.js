@@ -6,7 +6,7 @@ $(document).ready( function (){
 })
 
 const loadReplies = () => {
-    axios.get(`http://127.0.0.1:8000/api/posts`,{params: {
+    axios.get(`/api/posts`,{params: {
         createdBy: userProfile,
         reply:true
       }})
@@ -19,7 +19,16 @@ const loadReplies = () => {
 
 }
 const loadPosts = () => {
-    axios.get(`http://127.0.0.1:8000/api/posts`,{params: {
+    axios.get(`/api/posts`,{params: {
+        pinned: true,
+      }}).then(response =>{
+        const data = response.data.data
+        outputPinnedPost($('.pinnedPostContainer'),data)
+    }).catch(err => {
+        console.log(err);
+    })
+
+    axios.get(`/api/posts`,{params: {
         createdBy: userProfile,
         reply:false
       }})
@@ -31,6 +40,21 @@ const loadPosts = () => {
     })
 
 }
+
+const outputPinnedPost = (container,results) => {
+    container.html("")
+    let html =""
+    if(results.length < 1){ 
+        container.hide()
+        return 
+    }
+    html = results.map(item => {
+        return createPostHtml(item)
+    })  
+    html = html.join(" ")
+    container.html(html)
+}
+
 
 
 
