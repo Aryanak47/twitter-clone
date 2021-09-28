@@ -18,7 +18,11 @@ mixin createPostForm(user)
                         i(class="far fa-smile")
                 .buttonContainer
                     button#submitPostButton(disabled="") Post
-                    
+
+mixin postMixin(logedIn)
+    +createReplyForm(logedIn)
+    +createPinButton()
+    +unconfirmPinModel()            
 mixin createReplyForm(user) 
     #replyModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='replyModalLabel' aria-hidden='true')
         .modal-dialog(role='document')
@@ -89,6 +93,8 @@ mixin createCoverUpload()
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button#uploadCoverBtn.btn.btn-primary(type='button') save
+
+
 
 mixin createPinButton() 
     #confirmPinModel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='confirmPinModelLabel' aria-hidden='true')

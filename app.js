@@ -40,6 +40,7 @@ const registerRoute = require('./routes/registerRoute')
 const logoutRoute = require('./routes/logoutRoute')
 const postReplyRoute = require('./routes/postRoute')
 const profileRoute = require('./routes/profileRoute')
+const searchRoute = require('./routes/searchRoute')
 
 // Api routes
 const postRoute = require('./routes/api/posts')
@@ -54,6 +55,7 @@ app.use(middleware.requireLogin)
 app.use("/logout", logoutRoute)
 app.use("/posts", postReplyRoute)
 app.use("/profile", profileRoute)
+app.use("/search", searchRoute)
 // Api
 app.use("/api/posts", postRoute)
 app.use("/api/users", userRoute)

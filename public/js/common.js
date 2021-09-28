@@ -594,3 +594,33 @@ $(document).on('click', ".followBtn", async function (event) {
    
 
 })
+
+function outputUsers(container,data) {
+    container.html("")
+    if(data.length < 1){
+        return container.html("<p>Nothing to show</p>")
+    } 
+
+    // <img src="${user.profile}" alt = "profile picture">
+    let html = data.map(user => {
+        const myProfile = user._id === signedUser._id
+        const isFollowing = signedUser.following.includes(user._id)
+        const text = isFollowing ? "Following" : "follow"
+        const btnClass = isFollowing ? "followBtn following" : "followBtn"
+        let followBtn = ` <button class=${btnClass} data-id=${user._id}>${text}</button>`
+        return `<div class="user__header">
+      
+        <div class="user__info">  
+            <div class="imgContainer">
+                <img src=${user.profile}>
+            </div>
+            <div>
+                <a href="/profile/${user.username}" class="displayName">${user.firstName} ${user.lastName}</a>
+                <p class="username">@${user.username}</p>
+            </div>
+            ${myProfile ? "":followBtn}
+        </div>
+        </div>`
+    })
+    container.html(html)
+}

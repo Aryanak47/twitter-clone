@@ -539,6 +539,25 @@ h2{
     font-size: 12px;
 }
 
+.searchBoxContainer{
+    position:relative;
+    color:var(--greyText);
+    padding:10px 15px;
+}
+.searchBoxContainer i {
+   position:absolute;
+   top: 18px;
+   left: 25px;
+}
+.searchBoxContainer #searchBox{
+    border-radius:25px;
+    outline:none;
+    border:none;
+    width:100%;
+    background-color:var(--lightColor);
+    padding: 5px 10px 5px 35px;
+}
+
 
 
 

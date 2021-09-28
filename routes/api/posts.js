@@ -13,6 +13,11 @@ router.get("/", async (req,res,next) => {
       filter.replyTo = {$exists: reply}
       delete filter.reply 
     }
+    if(filter && filter.search != undefined){
+      const {search} = filter
+      filter.content = { $regex: search, $options: "i" }
+      delete filter.search
+    }
     let posts = await getPosts(filter)  
     res.status(200).json({
       status: "success", 

@@ -1,0 +1,13 @@
+extends layout/main-layout.pug
+block content 
+    .searchBoxContainer
+        i.fas.fa-search
+        input(type="text",id="searchBox",data-search=selectedTab,placeholder="search users or posts")
+
+    .tabContainer(data-id=logedIn)
+        +createTabs("Posts",`/search/posts`,selectedTab !== "users")
+        +createTabs("Users",`/search/users`,selectedTab == "users")
+    .resultsContainer
+    +postMixin(logedIn)
+block script
+    script(src="/js/search.js")
