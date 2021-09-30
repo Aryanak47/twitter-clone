@@ -48,6 +48,9 @@ button{
     outline: none;
     border: none;
     background: transparent;
+    /* text-align: center; */
+    display: inherite;
+    /* text-align: center; */
 }
 nav a {
     padding: 10px;
@@ -557,7 +560,52 @@ h2{
     background-color:var(--lightColor);
     padding: 5px 10px 5px 35px;
 }
+.chatPageContainer{
+    display:flex;
+    flex-direction:column;
+}
+.chatTitleBox{
+    padding: 10px;
+    display:flex;
+    min-height:60px;
+    border:1px solid var(--lightColor);
+}
+.chatTitleBox label{
+    margin-right:10px;
+    height:100%;
+}
 
+.chatTitleBox #userSearchTextbox{
+    flex:1;
+    min-width:350px;
+    border:none;
+    outline:none;
+    font-size:18px;
+    font-weight:200;
+
+}
+#createChatButton{
+    background-color:var(--blue);
+    color:#fff;
+    border:none;
+    margin:10px auto;
+    padding:7px 15px;
+    border-radius:50px;
+    outline: none;
+}
+#createChatButton:disabled{
+    background-color:var(--light);
+    color:var(--gray)
+}
+
+.userSelected{
+    background-color:var(--lightColor);
+    color:var(--blue);
+    margin:0 5px;
+    padding:2px 5px;
+    border-radius:5px;
+
+}
 
 
 

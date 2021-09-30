@@ -11,8 +11,8 @@ router.get('/', async (req, res) => {
       const {search} = filter
       filter = {
         $or: [
-          {firstname: { $regex: search, $options: "i" }},
-          {lastname: { $regex: search, $options: "i" }},
+          {firstName: { $regex: search, $options: "i" }},
+          {lastName: { $regex: search, $options: "i" }},
           {username: { $regex: search, $options: "i" }}
         ]
       }

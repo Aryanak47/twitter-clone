@@ -1,6 +1,8 @@
 
 // Globals
 let cropper;
+let timer;
+let selectedUsers = [];
 
 // for image uploading
 $(".imageUpload").click(function () {
@@ -66,7 +68,6 @@ const removeImage = (e) => {
     checkImages()
 }
 
-
 const removeOldImages = () => {
     let images = $(".post-imgs")
     let len = $(".post-imgs").children().length
@@ -74,21 +75,6 @@ const removeOldImages = () => {
         images.empty()
     }
 }
-// // check total number of imageUpload
-// const checkImages = () => {
-//     const totalImages = $(".post-imgs").children().length
-//     if(totalImages >3 ){
-//         $(".imageUpload").addClass("disabled");
-//         $('input[type="file"]').prop("disabled",true)
-//         return 
-//     }
-//     $(".imageUpload").removeClass("disabled");
-//     $('input[type="file"]').prop("disabled",false)
-
-
-// }
-
-
 // handle emoji
 $('.fa-smile').click(function (e) {
     const emoji = document.querySelector('#emojis') 
@@ -118,7 +104,7 @@ $("#postTextarea, #replyTextarea").keyup(function (e) {
     btn.prop('disabled', true) 
 })
 
-const postForm = document.querySelector('form');
+const postForm = document.querySelector('.postInfo');
 if(postForm){
     postForm.addEventListener('submit', async e => {
         e.preventDefault();
@@ -340,7 +326,26 @@ $("#replyModal").on('show.bs.modal',async function (event) {
 
     
 })
-// reply button
+$("#replyBtn").on("click",async function (event) {
+    const id = $("#replyBtn").attr('data-id')
+   
+    try {
+        const formData = new FormData()
+        const reply = $("#replyTextarea").val();
+        formData.append("content", reply )
+        formData.append("replyTo",id )
+        const result = await axios.post('/api/posts',formData);
+        if(result.data.status ==="success"){ 
+            location.reload("/")
+           
+        }            
+    }catch (err) {
+        // Todo show alert
+        console.log(err)
+    }
+
+})
+
 $("#replyModal").on('hidden.bs.modal',async function (event) {
     $(".modal-body .post").html("")
 })
@@ -432,25 +437,6 @@ $("#uploadCoverBtn").click(function (e) {
 
 })
 
-$("#replyBtn").on("click",async function (event) {
-    const id = $("#replyBtn").attr('data-id')
-   
-    try {
-        const formData = new FormData()
-        const reply = DOMPurify.sanitize( $("#replyTextarea").val() );
-        formData.append("content", reply )
-        formData.append("replyTo",id )
-        const result = await axios.post('/api/posts',formData);
-        if(result.data.status ==="success"){ 
-            location.reload("/")
-           
-        }            
-    }catch (err) {
-        // Todo show alert
-        console.log(err)
-    }
-
-})
 // like button
 $(document).on('click', ".likeBtn",async function (event) {
     const btn = $(event.target) 
@@ -600,9 +586,14 @@ function outputUsers(container,data) {
     if(data.length < 1){
         return container.html("<p>Nothing to show</p>")
     } 
+    let html =  data.map(user => {
+        return createUserHtml(user)
 
-    // <img src="${user.profile}" alt = "profile picture">
-    let html = data.map(user => {
+    })
+    container.html(html)
+}
+function createUserHtml(user){
+     // <img src="${user.profile}" alt = "profile picture">
         const myProfile = user._id === signedUser._id
         const isFollowing = signedUser.following.includes(user._id)
         const text = isFollowing ? "Following" : "follow"
@@ -621,6 +612,80 @@ function outputUsers(container,data) {
             ${myProfile ? "":followBtn}
         </div>
         </div>`
+}
+
+// search user to create group chat
+$("#userSearchTextbox").on("keydown", (event)=> {
+    clearTimeout(timer);
+    const textBox = $(event.target);
+    let val = textBox.val();
+   
+    if(val ==="" && event.keyCode == 8){
+        // remove selected users
+        if(selectedUsers.length > 0){
+            selectedUsers.pop()
+            updateSelectedUsers()
+        }
+        if(selectedUsers.length == 0) $("#createChatButton").prop("disabled",true)
+    }
+    timer = setTimeout(function() {
+        val = textBox.val().trim();
+        if(val === ""){
+            $(".resultsContainer").html('');
+            return
+        }
+        searchUser(val);
+
+    },1000)
+
+})
+async function searchUser(search) {
+    const response = await axios.get("/api/users",{params:{search}})
+    const results = response.data.data
+    outputSelectedUsers($('.resultsContainer'),results)
+
+}
+function outputSelectedUsers(container,data){
+    container.html("")
+    if(data.length < 1){
+        return container.html("<p>Nothing to show</p>")
+    } 
+    data.forEach(user => {
+        if(user._id === signedUser._id || selectedUsers.some(u => u._id === user._id)) return
+        
+        let html= createUserHtml(user)
+        // var div = document.createElement("div");
+        // $(div).append(html)
+        // $(div).on("click",function(){
+        //     checkSelectedUsers(user)
+        // })
+        // container.append(div)
+
+        // OR
+        const element = $(html)
+        $(element).click(function(){
+            checkSelectedUsers(user)
+        })
+        container.append(element)
+
     })
-    container.html(html)
+}
+
+function checkSelectedUsers(user){
+    selectedUsers.push(user)
+    updateSelectedUsers()
+    $(".resultsContainer").html("")
+    $("#createChatButton").prop("disabled",false)
+    $("#userSearchTextbox").val("").focus()
+   
+}
+
+function updateSelectedUsers(){
+    let elements =[]
+    selectedUsers.forEach(user => {
+        const userElement = `<span class="userSelected">${user.firstName} ${user.lastName}</span>`
+        elements.push(userElement)
+    })
+    $(".userSelected").remove()
+    $("#selectedUsers").prepend(elements)
 }
