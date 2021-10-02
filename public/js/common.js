@@ -689,3 +689,15 @@ function updateSelectedUsers(){
     $(".userSelected").remove()
     $("#selectedUsers").prepend(elements)
 }
+
+$("#createChatButton").click( async function (e) {
+    try {
+        const users = JSON.stringify(selectedUsers)
+        const response = await axios.post('/api/chat',{users});
+        window.location.href = `/message/${response.data.result._id}`
+    }catch (err) {
+        // Todo show alert
+        alertUser("Something went wrong.try again later")
+    }
+
+})

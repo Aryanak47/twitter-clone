@@ -42,6 +42,7 @@ const postReplyRoute = require('./routes/postRoute')
 const profileRoute = require('./routes/profileRoute')
 const searchRoute = require('./routes/searchRoute')
 const messagesRoute = require('./routes/messagesRoute')
+const ChatRoute = require('./routes/api/chatRoute')
 
 // Api routes
 const postRoute = require('./routes/api/posts')
@@ -58,6 +59,7 @@ app.use("/posts", postReplyRoute)
 app.use("/profile", profileRoute)
 app.use("/search", searchRoute)
 app.use("/messages",messagesRoute)
+app.use("/api/chat",ChatRoute)
 // Api
 app.use("/api/posts", postRoute)
 app.use("/api/users", userRoute)
