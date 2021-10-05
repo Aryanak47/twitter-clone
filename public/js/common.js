@@ -693,7 +693,7 @@ function updateSelectedUsers(){
 $("#createChatButton").click( async function (e) {
     try {
         const users = JSON.stringify(selectedUsers)
-        const response = await axios.post('/api/chat',{users});
+        const response = await axios.post('/api/chats',{users});
         window.location.href = `/message/${response.data.result._id}`
     }catch (err) {
         // Todo show alert

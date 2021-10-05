@@ -59,8 +59,8 @@ app.use("/posts", postReplyRoute)
 app.use("/profile", profileRoute)
 app.use("/search", searchRoute)
 app.use("/messages",messagesRoute)
-app.use("/api/chat",ChatRoute)
 // Api
+app.use("/api/chats",ChatRoute)
 app.use("/api/posts", postRoute)
 app.use("/api/users", userRoute)
 
