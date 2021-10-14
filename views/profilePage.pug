@@ -19,7 +19,7 @@ block content
                         i(class="fa fa-camera")
         .profileBtns 
             if logedIn._id != profile._id
-                a(href="#" class="profileBtn")
+                a(href=`/message/${profile._id}` class="profileBtn")
                     i(class="far fa-envelope")
                 +createFollowingBtn(profile,profile.followers && profile.followers.includes(logedIn))
         .profileInfoContainer 

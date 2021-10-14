@@ -28,7 +28,6 @@ function outputChat (chats,container){
 function createChatHtml(chat){
    let images = getChatImage(chat)
    let chatName = getChatName(chat)
-   console.log("s")
    let html = `<a href="/message/${chat._id}" class="resultContainerList">
       ${images}
       <div class="resultDetail elipsis">
@@ -62,7 +61,6 @@ function getChatImage(chat) {
 
 function getUsers(user) {
    if(user.length == 1) {
-      console.log("no user")
       return user
    }
    const users = user.filter(user => user._id != signedUser._id)

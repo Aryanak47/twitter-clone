@@ -124,3 +124,20 @@ mixin unconfirmPinModel()
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button#unconfirmPinBtn.btn.btn-primary(type='button') Unpin
+
+
+mixin createChatImage(users,logedIn)
+    -let maxImage = 3
+    -let remainingImage =users.length - maxImage
+    -let i =0
+    -remainingImage--
+    if (remainingImage > 0)
+        span#remainingBadge #{`+${remainingImage}`}
+    
+    each user in users
+        if users.length > 1 && user._id == logedIn._id
+            -continue
+        if (i>=maxImage)
+            -break
+        img(src=user.profile,class="chat-photos" alt="user photo")
+        -i++

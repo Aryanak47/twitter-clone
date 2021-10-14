@@ -15,6 +15,13 @@
 
 }
 
+body,html{
+    height:100%;
+    min-height:100%;
+    font-weight:300;
+    background-color:#fff;
+}
+
 
 .alert{
     position: fixed;
@@ -34,8 +41,15 @@ a:hover{
     color: inherit;
     text-decoration:none;
 }
-.row{
+
+.wrapper{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+}
+.wrapper > .row{
     margin-right: 0;
+    height:100%;
 }
 
 nav{
@@ -75,7 +89,7 @@ nav a:hover{
     padding:0;
     display: flex;
     flex-direction: column;
-   
+    /* height: 100%; */
 }
 h2{
     font-size: 20px;
@@ -563,12 +577,14 @@ h2{
 .chatPageContainer{
     display:flex;
     flex-direction:column;
+    flex: 1;
 }
 .chatTitleBox{
     padding: 10px;
     display:flex;
     min-height:60px;
     border:1px solid var(--lightColor);
+    align-items:baseline;
 }
 .chatTitleBox label{
     margin-right:10px;
@@ -660,6 +676,82 @@ h2{
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+.errorMessage{
+    margin: 10px;
+    font-weight:bold;
+    color:var(--lightBlue)
+}
+
+.mainContentContainer{
+    display:flex;
+    flex:1;
+}
+.chatContainer{
+    flex:1;
+    display:flex;
+    flex-direction: column;
+}
+#chatName{
+    border:1px solid transparent;
+    padding:0 5px;
+    width:100%;
+  
+}
+
+#chatName:hover{
+    border:1px solid var(--gray);
+    cursor:text;
+}
+.chatContainer .footer{
+    display:flex;
+    padding:var(--space);
+}
+
+.chatContainer .footer textarea{
+    flex:1;
+    border:1px solid transparent;
+    height:38px;
+    resize:none;
+    border-radius:20px;
+    padding:2px 15px;
+    outline:none;
+    background-color:rgba(0,0,0,0.05)
+}
+.chatContainer .footer button{
+    background-color:transparent;
+    color:var(--blue);
+    font-size:24px;
+    margin-left:10px;
+}
+.chatMessages{
+    flex:1;
+}
+.chatPageContainer .chatTitleBox{
+    align-items:center;
+}
+.chatTitlePhoto{
+    display:flex;
+    flex-direction:row-reverse;
+}
+.chatTitlePhoto img,
+.chatTitlePhoto #remainingBadge{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    border:3px solid #fff
+   
+}
+.chatTitlePhoto img:not(:last-child){
+     margin-left:-15px;
+}
+
+.chatTitlePhoto #remainingBadge{
+    background-color:rgba(0,0,0,0.05);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
 }
 
 
