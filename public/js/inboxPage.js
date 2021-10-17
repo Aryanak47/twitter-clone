@@ -20,7 +20,6 @@ function outputChat (chats,container){
    }
    chats.forEach((chat) => {
       const content = createChatHtml(chat);
-
       container.append(content)
    })
 }
@@ -39,17 +38,9 @@ function createChatHtml(chat){
    return html;
 }
 
-function getChatName(chat) {
-   let chatName = chat.chatName;
-   if(!chatName) {
-      const users = getUsers(chat.users).map(user => user.firstName)
-      chatName = users.join(", ")
-     
-   }
-   return chatName;
-}
+
 function getChatImage(chat) {
-   let  users =  getUsers(chat.users)
+   let  users =  getChatUsers(chat.users)
    let groupChatClass = ""
    let chatImage = `<img src=${users[0].profile} alt="chat profile">`
    if(users.length > 1){
@@ -59,10 +50,3 @@ function getChatImage(chat) {
    return `<div class="resultContainerProfile ${groupChatClass}">${chatImage}</div>`
 }
 
-function getUsers(user) {
-   if(user.length == 1) {
-      return user
-   }
-   const users = user.filter(user => user._id != signedUser._id)
-   return users
-}

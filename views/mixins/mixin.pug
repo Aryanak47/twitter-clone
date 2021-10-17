@@ -125,6 +125,20 @@ mixin unconfirmPinModel()
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button#unconfirmPinBtn.btn.btn-primary(type='button') Unpin
 
+mixin changeChatName(chat) 
+    #chatNameModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='chatNameModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#chatNameModal.modal-title Change chat name?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .model-body
+                    input#chatNameTextBox(type ="text",value =chat.chatName,placeholder='new chat name')
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#chatNameBtn.btn.btn-primary(type='button') save
+
 
 mixin createChatImage(users,logedIn)
     -let maxImage = 3

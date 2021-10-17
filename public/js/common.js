@@ -701,3 +701,20 @@ $("#createChatButton").click( async function (e) {
     }
 
 })
+
+function getChatName(chat) {
+    let chatName = chat.chatName;
+    if(!chatName) {
+       const users = getChatUsers(chat.users).map(user => user.firstName)
+       chatName = users.join(", ")
+      
+    }
+    return chatName;
+ }
+ function getChatUsers(user) {
+    if(user.length == 1) {
+       return user
+    }
+    const users = user.filter(user => user._id != signedUser._id)
+    return users
+ }
