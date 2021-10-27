@@ -5,9 +5,6 @@ $(document).ready(function(){
    .then(res => {
       const chats = res.data.chats
       outputChat(chats,$(".resultsContainer"))
-
-   }).catch(err => {
-       
    })
 })
 
@@ -27,17 +24,24 @@ function outputChat (chats,container){
 function createChatHtml(chat){
    let images = getChatImage(chat)
    let chatName = getChatName(chat)
+   let lastMessage = getLastMessage(chat.lastMessage)
+  
    let html = `<a href="/message/${chat._id}" class="resultContainerList">
       ${images}
       <div class="resultDetail elipsis">
          <span class="heading elipsis">${chatName}</span>
-         <span class="subText elipsis">hello my friend how r u</span>
+         <span class="subText elipsis">${lastMessage}</span>
       </div>
    
    </a>`
    return html;
 }
-
+function getLastMessage(lastMessage) {
+   if(lastMessage != null) {
+      return `${lastMessage.sendBy.firstName} ${lastMessage.sendBy.lastName} : ${lastMessage.content}`
+   }
+   return 'new chat';
+}
 
 function getChatImage(chat) {
    let  users =  getChatUsers(chat.users)

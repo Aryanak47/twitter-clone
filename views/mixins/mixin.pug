@@ -140,11 +140,15 @@ mixin changeChatName(chat)
                     button#chatNameBtn.btn.btn-primary(type='button') save
 
 
-mixin createChatImage(users,logedIn)
+mixin createChatImage(chat,logedIn)
+    if (!chat)
+        return
+    
     -let maxImage = 3
-    -let remainingImage =users.length - maxImage
+    -let remainingImage =chat.users.length - maxImage
     -let i =0
     -remainingImage--
+    -let users = chat.users
     if (remainingImage > 0)
         span#remainingBadge #{`+${remainingImage}`}
     

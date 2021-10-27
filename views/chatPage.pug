@@ -9,13 +9,15 @@ block content
         .chatPageContainer 
             .chatTitleBox
                 .chatTitlePhoto
-                    +createChatImage(chat.users,logedIn)
+                    +createChatImage(chat,logedIn)
                 span#chatName(data-toggle="modal",data-target="#chatNameModal")
             .mainContentContainer
-                .chatContainer
-                    .chatMessages
+                .loadingSpinnerContainer
+                        img(src="/img/loadingSpinner.gif", alt="Loading spinner")
+                .chatContainer(style="visibility:hidden;")
+                    ul.chatMessages
                     .footer
-                        textarea(name="messageInput", placeholder="Type a message...")
+                        textarea.textInputBox(name="messageInput", placeholder="Type a message...")
                         button#SendMsgButton 
                             i.far.fa-paper-plane
 

@@ -705,7 +705,7 @@ $("#createChatButton").click( async function (e) {
 function getChatName(chat) {
     let chatName = chat.chatName;
     if(!chatName) {
-       const users = getChatUsers(chat.users).map(user => user.firstName)
+       const users = getChatUsers(chat.users).map(user => user.firstName + " " + user.lastName)
        chatName = users.join(", ")
       
     }

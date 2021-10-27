@@ -759,8 +759,94 @@ h2{
     outline:none;
 }
 
+.chatMessages .msg {
+    list-style:none;
+    display:flex;
+    justify-content:flex-start;
+    margin:10px 5px;
+    align-items:flex-end;
+}
+
+.chatMessages  .otherMsg .msgBody{
+    background-color:var(--blue);
+    color:#fff;
+}
+.chatMessages .msgBody{
+     padding:5px 10px;
+    border-radius:20px;
+    font-size:14px;
+}
+.chatMessages   .msg.myMsg {
+    flex-direction:row-reverse;
+}
+.chatMessages  .myMsg .msgBody{
+    background-color:rgba(0,0,0,0.05);
+    color:var(--greyText);
+}
+.chatMessages .msgContainer{
+    display:flex;
+    max-width:55%;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.chatMessages  .msg.mine .msgContainer{
+    align-items: flex-end;
+}
+.chatMessages  .msg.otherMsg .msgContainer{
+    align-items: flex-start;
+}
+
+.chatMessages  .msg.myMsg.first .msgBody{
+    border-bottom-right-radius:2px;
+}
+
+.chatMessages  .msg.myMsg:not(.first):not(.last) .msgBody{
+    border-top-right-radius:0px;
+     border-bottom-right-radius:0px;
+}
+.chatMessages  .msg.myMsg.last .msgBody{
+    border-bottom-right-radius:18px;
+}
+.chatMessages  .msg.myMsg.last:not(.first) .msgBody{
+    border-top-right-radius:2px;
+}
 
 
+.chatMessages .msg.otherMsg.first .msgBody{
+    border-bottom-left-radius:2px;
+}
+
+.chatMessages  .msg.otherMsg:not(.first):not(.last) .msgBody{
+    border-top-left-radius:0px;
+     border-bottom-left-radius:0px;
+}
+.chatMessages  .msg.otherMsg.last .msgBody{
+    border-bottom-left-radius:18px;
+}
+.chatMessages  .msg.otherMsg.last:not(.first) .msgBody{
+    border-top-left-radius:2px;
+}
+
+.chatMessages .sender{
+    color:var(--greyText);
+    font-weight:400
+}
+
+.msg .imgContainer{
+    width:30px;
+    height:30px
+}
+.loadingSpinnerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.loadingSpinnerContainer img {
+    width: 50%;
+    max-width: 75px;
+}
 
 
 

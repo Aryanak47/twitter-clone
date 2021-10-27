@@ -42,11 +42,13 @@ const postReplyRoute = require('./routes/postRoute')
 const profileRoute = require('./routes/profileRoute')
 const searchRoute = require('./routes/searchRoute')
 const messagesRoute = require('./routes/messagesRoute')
-const ChatRoute = require('./routes/api/chatRoute')
+
 
 // Api routes
 const postRoute = require('./routes/api/posts')
 const userRoute = require('./routes/api/users')
+const chats = require('./routes/api/chats')
+const messages = require('./routes/api/messages')
 
 // Views
 app.use("/login", loginRoute)
@@ -60,7 +62,8 @@ app.use("/profile", profileRoute)
 app.use("/search", searchRoute)
 app.use("/message",messagesRoute)
 // Api
-app.use("/api/chats",ChatRoute)
+app.use("/api/chats",chats)
+app.use("/api/messages",messages)
 app.use("/api/posts", postRoute)
 app.use("/api/users", userRoute)
 

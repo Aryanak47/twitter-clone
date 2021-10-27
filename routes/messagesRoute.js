@@ -32,12 +32,11 @@ router.get("/:chatId", async (req,res,next) => {
         payload.errorMessage = "You don't have permission or chat does not exist."
         return res.status(200).render("chatPage",payload)
     }
-    let chat = await Chat.findOne({_id:chatid,users:{$elemMatch:{$eq:user}}})
-    .populate("users")
+    let chat = await Chat.findOne({_id:chatid,users:{$elemMatch:{$eq:user}}}).populate("users")
     if(chat == null){
         const userFound = await User.findById(chatid)
         if(userFound != null){
-            chat = getChatByUser(userFound._id,user)
+            chat = await getChatByUser(userFound._id,user)
         }
     }
     if(chat == null){
@@ -48,25 +47,25 @@ router.get("/:chatId", async (req,res,next) => {
     res.status(200).render("chatPage",payload)
 })
 
-async function getChatByUser(userLogedIn,otherUser){
-    return await Chat.findOneAndUpdate({
+ function getChatByUser(userLogedIn,otherUser){
+    return  Chat.findOneAndUpdate({
         groupChat:false,
-        users:{
-            $size:2,
-            $all:[
-                {$elemMatch:{$eq:userLogedIn}},
-                {$elemMatch:{$eq:otherUser}}
+        users: {
+            $size: 2,
+            $all: [
+                { $elemMatch: { $eq: userLogedIn }},
+                { $elemMatch: { $eq: otherUser }}
             ]
         },
     },{
-            $setOnInsert:{
-            users:[userLogedIn,otherUser]
+        $setOnInsert: {
+            users: [userLogedIn, otherUser]
         }
-    }, 
-    { 
-        upsert: true ,
-        new: true
-    }).populate("users")
+    },
+    {
+        new: true,
+        upsert: true
+    }).populate("users");
 }
 
 module.exports = router;
